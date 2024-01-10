@@ -16,7 +16,7 @@ class AuthController extends Controller
         $validator = Validator::make($request->all(), [
             'name' => 'nullable',
             'mobile' => 'required|unique:users,mobile',
-            'bp_num' => 'required',
+            'bp_num' => 'required|unique:users,bp_num',
             'password' => 'required|min:6',
             'rank' => 'nullable',
             'image' => 'nullable',
