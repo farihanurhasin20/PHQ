@@ -16,9 +16,13 @@ return new class extends Migration
         Schema::create('bookings', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
+            $table->date('date');
             $table->string('breakfast')->nullable();
+            $table->string('b_scan')->nullable();
             $table->string('lunch')->nullable();
+            $table->string('l_scan')->nullable();
             $table->string('dinner')->nullable();
+            $table->string('d_scan')->nullable();
             $table->timestamps();
         });
     }
