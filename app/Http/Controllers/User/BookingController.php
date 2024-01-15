@@ -15,11 +15,13 @@ class BookingController extends Controller
     public function index()
     {
 
+        $user = Auth::user();
         
         $today = Carbon::today();
     
-        $bookings = Booking::whereDate('created_at', $today)
-        ->get();
+        $bookings = Booking::where('user_id', $user->id)
+        ->whereDate('created_at', $today)
+        ->latest()->get();
         
         return response()->json(['data' => $bookings], 200);
     }
@@ -42,7 +44,7 @@ class BookingController extends Controller
         $user = Auth::user();
         $today = Carbon::today();
         $bookings = Booking::where('user_id', $user->id)
-        ->whereDate('created_at', $today)
+        ->whereDate('created_at', $request->date)
         ->get()->first();
 
         
