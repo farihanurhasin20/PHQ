@@ -7,15 +7,21 @@ use App\Models\Booking;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
+use Carbon\Carbon;
 // use BaconQrCode\Encoder\QrCode;
 
 class BookingController extends Controller
 {
     public function index()
     {
+
         $user = Auth::user();
         
-        $bookings = Booking::where('user_id', $user->id)->get();
+        $today = Carbon::today();
+    
+        $bookings = Booking::where('user_id', $user->id)
+        ->whereDate('created_at', $today)
+        ->latest()->get();
         
         return response()->json(['data' => $bookings], 200);
     }
@@ -35,6 +41,17 @@ class BookingController extends Controller
         if ($validator->fails()) {
             return response()->json(['error' => $validator->errors()], 200);
         }
+        $user = Auth::user();
+        $today = Carbon::today();
+        $bookings = Booking::where('user_id', $user->id)
+        ->whereDate('created_at', $request->date)
+        ->get()->first();
+
+        
+        if ($bookings != null) {
+            return response()->json(['message' => 'Already Booked'], 200);
+        }
+       
     
         $bookingData = $request->all();
     
