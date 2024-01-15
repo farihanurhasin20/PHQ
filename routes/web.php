@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Admin\HomeController;
 use App\Http\Controllers\Admin\LoginController;
+use App\Http\Controllers\Admin\BookingListController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -30,6 +31,8 @@ Route::group(['prefix' => 'admin'], function () {
 
    Route::group(['middleware' => 'admin.auth'],function(){
         Route::get('/dashboard', [HomeController::class, 'index'])->name('admin.dashboard');
+        Route::get('/list', [BookingListController::class, 'index'])->name('users.list');
+        Route::get('/edit/{id}', [BookingListController::class, 'edit'])->name('users.edit');
         Route::get('/logout',[LoginController::class, 'logout'])->name('admin.logout');
 
     });
