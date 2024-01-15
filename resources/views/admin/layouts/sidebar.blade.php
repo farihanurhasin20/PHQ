@@ -19,6 +19,18 @@
                         <p>Dashboard</p>
                     </a>
                 </li>
+                <li class="nav-item">
+                    <a href="{{ route('users.list') }}" class="nav-link">
+                        <i class="nav-icon fas fa-users"></i>
+                        <p>Users</p>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="{{ route('bookings.list') }}" class="nav-link">
+                        <i class="nav-icon far fa-calendar-alt"></i>
+                        <p>Bookings</p>
+                    </a>
+                </li>
             </ul>
         </nav>
         <!-- /.sidebar-menu -->

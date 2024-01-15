@@ -4,7 +4,7 @@
     <div class="container-fluid">
         <div class="row mb-2">
             <div class="col-sm-6">
-                <h1>Dashboard</h1>
+                <h1>Booked For Today</h1>
             </div>
             <div class="col-sm-6">
 
@@ -21,7 +21,7 @@
             <div class="col-lg-4 col-6">
                 <div class="small-box card">
                     <div class="inner">
-                        <h3>12</h3>
+                        <h3>{{$totalBreakfast}}</h3>
                         <p>Breakfast</p>
                     </div>
                     <div class="icon">
@@ -33,7 +33,7 @@
             <div class="col-lg-4 col-6">
                 <div class="small-box card">
                     <div class="inner">
-                        <h3>13</h3>
+                        <h3>{{$totalLunch}}</h3>
                         <p>Lunch</p>
                     </div>
                     <div class="icon">
@@ -46,7 +46,7 @@
             <div class="col-lg-4 col-6">
                 <div class="small-box card">
                     <div class="inner">
-                        <h3>14</h3>
+                        <h3>{{$totalDinner}}</h3>
                         <p>Dinner</p>
                     </div>
                     <div class="icon">
