@@ -23,7 +23,7 @@ class AuthController extends Controller
         ]);
 
         if ($validator->fails()) {
-            return response()->json(['error' => $validator->errors()], 200);
+            return response()->json(['message' => $validator->errors()], 200);
         }
 
         $userData = $request->all();
@@ -43,7 +43,7 @@ class AuthController extends Controller
         ]);
 
         if ($validator->fails()) {
-            return response()->json(['error' => $validator->errors()], 200);
+            return response()->json(['message' => $validator->errors()], 200);
         }
 
         if (Auth::attempt(['mobile' => $request->input('mobile'), 'password' => $request->input('password')])) {
@@ -52,7 +52,7 @@ class AuthController extends Controller
 
             return response()->json(['id'=>$user->id, 'token' => $token, 'name' => $user->name, 'image' => $user->image, 'rank' => $user->rank,'message' => 'Login successful'], 200);
         } else {
-            return response()->json(['error' => 'Invalid credentials'], 200);
+            return response()->json(['message' => 'Invalid credentials'], 200);
         }
     }
 
