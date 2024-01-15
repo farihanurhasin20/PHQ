@@ -33,7 +33,7 @@ class BookingController extends Controller
         ]);
     
         if ($validator->fails()) {
-            return response()->json(['error' => $validator->errors()], 400);
+            return response()->json(['error' => $validator->errors()], 200);
         }
     
         $bookingData = $request->all();
@@ -41,17 +41,17 @@ class BookingController extends Controller
         $userId = Auth::id();
         $bookingData['user_id'] = $userId;
     
-        if (!empty($bookingData['breakfast'])) {
-            $bookingData['b_scan'] = $this->generateQRCode($bookingData['date'], $userId, 'b');
-        }
+        // if (!empty($bookingData['breakfast'])) {
+        //     $bookingData['b_scan'] = $this->generateQRCode($bookingData['date'], $userId, 'b');
+        // }
     
-        if (!empty($bookingData['lunch'])) {
-            $bookingData['l_scan'] = $this->generateQRCode($bookingData['date'], $userId, 'l');
-        }
+        // if (!empty($bookingData['lunch'])) {
+        //     $bookingData['l_scan'] = $this->generateQRCode($bookingData['date'], $userId, 'l');
+        // }
     
-        if (!empty($bookingData['dinner'])) {
-            $bookingData['d_scan'] = $this->generateQRCode($bookingData['date'], $userId, 'd');
-        }
+        // if (!empty($bookingData['dinner'])) {
+        //     $bookingData['d_scan'] = $this->generateQRCode($bookingData['date'], $userId, 'd');
+        // }
     
         $booking = Booking::create($bookingData);
     

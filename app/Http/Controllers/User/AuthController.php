@@ -50,7 +50,7 @@ class AuthController extends Controller
             $user = Auth::user();
             $token = $user->createToken('MyApp')->plainTextToken;
 
-            return response()->json(['id'=>$user->id, 'token' => $token, 'name' => $user->name, 'image' => $user->image, 'rank' => $user->rank,'message' => 'Login successful'], 200);
+            return response()->json(['id'=>$user->id, 'token' => $token, 'name' => $user->name,'bp_number' => $user->bp_num, 'image' => $user->image, 'rank' => $user->rank,'message' => 'Login successful'], 200);
         } else {
             return response()->json(['message' => 'Invalid credentials'], 200);
         }
