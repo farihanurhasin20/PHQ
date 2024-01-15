@@ -55,7 +55,7 @@ class BookingController extends Controller
     
         $booking = Booking::create($bookingData);
     
-        return response()->json(['message' => 'Your meal for today has been booked successfully.', 'booking' => $booking], 201);
+        return response()->json(['message' => 'Your meal has been booked successfully.', 'booking' => $booking], 200);
     }
     
     private function generateQRCode($date, $userId, $mealType)

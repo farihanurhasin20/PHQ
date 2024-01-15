@@ -23,29 +23,16 @@ class AuthController extends Controller
         ]);
 
         if ($validator->fails()) {
-            return response()->json(['error' => $validator->errors()], 400);
+            return response()->json(['error' => $validator->errors()], 200);
         }
 
-        $userData = [
-            'name' => $request->input('name'),
-            'mobile' => $request->input('mobile'),
-            'bp_num' => $request->input('bp_num'),
-            'password' => Hash::make($request->input('password')),
-            'rank' => $request->input('rank'),
-        ];
-    
-        if ($request->hasFile('image')) {
-            $image = $request->file('image');
-            $imageContent = base64_encode(file_get_contents($image->path()));
-    
-            $userData['image'] = $imageContent;
-        }
+        $userData = $request->all();
     
         $user = User::create($userData);
 
         $token = $user->createToken('MyApp')->plainTextToken;
 
-        return response()->json(['message' => 'User registered successfully', 'user' => $user, 'token' => $token], 201);
+        return response()->json(['message' => 'User registered successfully'], 200);
     }
 
     public function login(Request $request)
@@ -56,16 +43,16 @@ class AuthController extends Controller
         ]);
 
         if ($validator->fails()) {
-            return response()->json(['error' => $validator->errors()], 400);
+            return response()->json(['error' => $validator->errors()], 200);
         }
 
         if (Auth::attempt(['mobile' => $request->input('mobile'), 'password' => $request->input('password')])) {
             $user = Auth::user();
             $token = $user->createToken('MyApp')->plainTextToken;
 
-            return response()->json(['token' => $token, 'name' => $user->name, 'message' => 'Login successful'], 200);
+            return response()->json(['id'=>$user->id, 'token' => $token, 'name' => $user->name, 'image' => $user->image, 'rank' => $user->rank,'message' => 'Login successful'], 200);
         } else {
-            return response()->json(['error' => 'Invalid credentials'], 401);
+            return response()->json(['error' => 'Invalid credentials'], 200);
         }
     }
 
