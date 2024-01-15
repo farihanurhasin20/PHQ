@@ -8,7 +8,7 @@
                 <h1>Edit</h1>
             </div>
             <div class="col-sm-6 text-right">
-                <a href="{{route('users.index')}}" class="btn btn-primary">Back</a>
+                <a href="{{route('users.list')}}" class="btn btn-primary">Back</a>
             </div>
         </div>
     </div>
@@ -33,25 +33,24 @@
                     </div>
                     <div class="col-md-6">
                         <div class="mb-3">
-                            <label for="slug">Email</label>
-                            <input type="text"  name="email" id="email" class="form-control" placeholder="Email" value={{$users->email}}>
+                            <label for="slug">Mobile</label>
+                            <input type="text"  name="email" id="email" class="form-control" placeholder="Email" value={{$users->Mobile}}>
                             <p class="error"></p>
                         </div>
                     </div>
 
                     <div class="col-md-6">
                         <div class="mb-3">
-                            <label for="slug">Password</label>
-                            <input type="password"  name="password" id="password" class="form-control" placeholder="password">
-                            <span>To change the password you have to enter a value, otherwise leave it blank</span>
-                            <p class="error"></p>
+                            <label for="slug">Rank</label>
+                            <input type="password"  name="rank" id="rank" class="form-control" placeholder="rank" value={{$users->rank}}>
+                           
                         </div>
                     </div>
  
                     <div class="col-md-6">
                         <div class="mb-3">
                             <label for="slug">Phone</label>
-                            <input type="text"  name="phone" id="phone" class="form-control" placeholder="phone" value={{$users->phone}}>
+                            <input type="text"  name="mobile" id="mobile" class="form-control" placeholder="mobile" value={{$users->mobile}}>
                             <p class="error"></p>
                         </div>
                     </div>
@@ -71,7 +70,7 @@
         </div>
         <div class="pb-5 pt-3">
             <button type="submit" class="btn btn-primary" >Update</button>
-            <a href="{{route('users.create')}}" class="btn btn-outline-dark ml-3">Cancel</a>
+            {{-- <a href="{{route('users.create')}}" class="btn btn-outline-dark ml-3">Cancel</a> --}}
         </div>
     </div>
 </form>
@@ -83,95 +82,7 @@
 @section('customJs')
 
     <script>
-    $("#userForm").submit(function(event){
-        event.preventDefault();
-        var element = $(this);
-        $("button[type=submit]").prop('disabled',true);
-        $.ajax({
-            url: '{{ route("users.update", $users->id) }}',
-            type: 'Put',
-            data: element.serializeArray(),  // Fixed typo: 'data' instead of 'date'
-            dataType: 'json',
-            headers: {
-
-        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-    },
-            success: function(response) {  // Fixed typo: 'function' instead of 'funtion'
-                // Handle success response here
-                $("button[type=submit]").prop('disabled',false);
-                if(response["status"] == true){
-                    if(response["role"] == 1) {
-                        window.location.href = "{{ route('users.index') }}";
-                    } else if (response["role"] == 2) {
-                        window.location.href = "{{ route('users.admin_index') }}";
-                    } else {
-                        window.location.href = "{{ route('users.vendor_index') }}";
-                    }
-                } else{
-                    var errors = response['errors'];
-                    $(".error").removeClass('is-invalid').html(''); // Remove error classes and clear error messages
-                    $("input[type='text'], select").removeClass('is-invalid');
-                    $.each(errors, function(key, value) {
-                        $(`#${key}`).addClass('is-invalid'); // Add the 'is-invalid' class to the input
-                        $(`#${key}`).next('p').addClass('invalid-feedback').html(value); // Add the error message
-                    });
-
-                }
-
-            },
-            error: function(jqXHR, exception) {
-                console.log("Something went wrong");
-            }
-        })
-    });
-
-   $("#name").change(function(){
-    element = $(this);
-    $("button[type=submit]").prop('disabled',true);
-    $.ajax({
-            url: '{{ route("getSlug") }}',
-            type: 'get',
-            data: {title: element.val()},  // Fixed typo: 'data' instead of 'date'
-            dataType: 'json',
-            headers: {
-
-        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-    },
-            success: function(response) {  // Fixed typo: 'function' instead of 'funtion'
-                // Handle success response here
-                $("button[type=submit]").prop('disabled',false);
-                if(response["status"]== true){
-                    $("#slug").val(response["slug"])
-                }
-    }
-});
-   });
-
-
-   Dropzone.autoDiscover = false;
-const dropzone = $("#image").dropzone({
-    init: function() {
-        this.on('addedfile', function(file) {
-            if (this.files.length > 1) {
-                this.removeFile(this.files[0]);
-            }
-        });
-    },
-    url:  "{{ route('temp-images.create') }}",
-    maxFiles: 1,
-    paramName: 'image',
-    addRemoveLinks: true,
-    acceptedFiles: "image/jpeg,image/png,image/gif",
-    headers: {
-
-        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-    },
-     success: function(file, response){
-        $("#image_id").val(response.image_id);
-        console.log(response)
-    }
-});
-
+   
 </script>
 
 

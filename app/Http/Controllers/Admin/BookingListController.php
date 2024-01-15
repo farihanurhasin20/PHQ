@@ -18,8 +18,8 @@ class BookingListController extends Controller
 
     public function edit($id){
         $users = User::where('id',$id)->get()->first();
-        dd($users);
-        return view('admin.users.list',compact('users'));
+        // dd($users);
+        return view('admin.users.edit',compact('users'));
 
     }
 }
