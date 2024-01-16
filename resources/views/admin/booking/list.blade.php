@@ -1,15 +1,19 @@
 @extends('admin.layouts.app')
 @section('content')
 <section class="content-header">
-        <div class="container-fluid my-2">
-            <div class="row mb-2">
-                <div class="col-sm-6">
-                    <h1>Today's booking list</h1>
-                </div>
+    <div class="container-fluid my-2">
+        <div class="row mb-2">
+            <div class="col-sm-6">
+                <h1>Today's booking list</h1>
+            </div>
+            <div class="col-sm-6 text-right">
+                <p>{{ \Carbon\Carbon::now()->format('l, F j, Y') }}</p>
             </div>
         </div>
-        <!-- /.container-fluid -->
-    </section>
+    </div>
+    <!-- /.container-fluid -->
+</section>
+
 
     <section class="content-header">
         <!-- ... Your existing content ... -->

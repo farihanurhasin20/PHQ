@@ -17,11 +17,17 @@ class BookingController extends Controller
 
         $user = Auth::user();
         
-        $today = Carbon::today();
+        // $today = Carbon::today();
     
+        // $bookings = Booking::where('user_id', $user->id)
+        // ->whereDate('created_at', $today)
+        // ->latest()->first();
+        $yesterday = now()->subDay(); // Subtracts one day from the current date
+
         $bookings = Booking::where('user_id', $user->id)
-        ->whereDate('created_at', $today)
-        ->latest()->get();
+            ->whereDate('created_at', $yesterday)
+            ->latest()
+            ->first();
         
         return response()->json(['data' => $bookings], 200);
     }
