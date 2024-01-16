@@ -21,9 +21,7 @@ Route::get('/', function () {
     return view('welcome');
 });
 Route::group(['prefix' => 'admin'], function () {
-    Route::get('/', function () {
-        return redirect()->route('admin.login'); 
-    });
+  
 
     Route::group(['middleware' => 'admin.guest'], function () {
         Route::get('/login', [LoginController::class, 'index'])->name('admin.login');

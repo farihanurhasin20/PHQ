@@ -4,6 +4,7 @@ namespace App\Http\Controllers\User;
 
 use App\Http\Controllers\Controller;
 use App\Models\Booking;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
@@ -87,7 +88,52 @@ class BookingController extends Controller
         // $qrCode = new QrCode($qrCodeData);
         return $qrCodeData;
     }
+    public function todayBookingCount()
+    {
+        
+        $today = Carbon::today();
     
+        $totalBreakfast = Booking::where('breakfast', '=', '1')
+        ->whereDate('date', $today)
+        ->count();
+        $totalBreakfastCheckedIn = Booking::where('breakfast', '=', '2')
+        ->whereDate('date', $today)
+        ->count();
+        $totalLunch = Booking::where('lunch', '=', '1')
+        ->whereDate('date', $today)
+        ->count();
+        $totalLunchCheckedIn = Booking::where('lunch', '=', '2')
+        ->whereDate('date', $today)
+        ->count();
+        $totalDinner = Booking::where('dinner', '=', '1')
+        ->whereDate('date', $today)
+        ->count();
+        $totalDinnerCheckedIn = Booking::where('dinner', '=', '2')
+        ->whereDate('date', $today)
+        ->count();
+        
+        return response()->json(['message' => 'meal deatails', 'totalBreakfast' => $totalBreakfast,'totalBreakfastCheckedIn' => $totalBreakfastCheckedIn, 'totalLunch' => $totalLunch ,'totalLunchCheckedIn' => $totalLunchCheckedIn ,'totalDinner' => $totalDinner, 'totalDinnerCheckedIn' => $totalDinnerCheckedIn], 200);
+    }
+
+    public function todayBookingList(Request $request)
+    {
+        
+        $users = User::where('role', 1)->get();
+        // $today = Carbon::today();
+
+        // $bookings = Booking::whereIn('user_id', $users->pluck('id'))
+        // ->whereDate('created_at', $today)
+        // ->latest()->get();
+
+        $yesterday = now()->subDay(); 
+        $bookings = Booking::whereIn('user_id', $users->pluck('id'))
+            ->whereDate('created_at', $yesterday)
+            ->where('breakfast', '=', '1')
+            ->latest()
+            ->get();
+        
+        return response()->json(['message' => 'meal deatails', 'bookings' => $bookings], 200);
+    }
 
 
 }
