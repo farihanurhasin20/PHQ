@@ -10,15 +10,20 @@ use Carbon\Carbon;
 class HomeController extends Controller
 {
     public function index(){
-        $today = Carbon::today();
-        $totalBreakfast = Booking::where('breakfast','=','1')
-        ->whereDate('created_at', '=', $today)->count();
+        $yesterday = Carbon::yesterday();
 
-        $totalLunch = Booking::where('lunch','=','1')
-        ->whereDate('created_at', '=', $today)->count();
-
-        $totalDinner = Booking::where('dinner','=','1')
-        ->whereDate('created_at', '=', $today)->count();
+        $totalBreakfast = Booking::where('breakfast', '=', '1')
+            ->whereDate('created_at', '=', $yesterday)
+            ->count();
+        
+        $totalLunch = Booking::where('lunch', '=', '1')
+            ->whereDate('created_at', '=', $yesterday)
+            ->count();
+        
+        $totalDinner = Booking::where('dinner', '=', '1')
+            ->whereDate('created_at', '=', $yesterday)
+            ->count();
+        
         
         return view('admin.dashboard',[
             'totalBreakfast' => $totalBreakfast,
