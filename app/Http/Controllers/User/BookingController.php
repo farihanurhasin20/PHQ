@@ -112,27 +112,35 @@ class BookingController extends Controller
         ->whereDate('date', $today)
         ->count();
         
-        return response()->json(['message' => 'meal deatails', 'totalBreakfast' => $totalBreakfast,'totalBreakfastCheckedIn' => $totalBreakfastCheckedIn, 'totalLunch' => $totalLunch ,'totalLunchCheckedIn' => $totalLunchCheckedIn ,'totalDinner' => $totalDinner, 'totalDinnerCheckedIn' => $totalDinnerCheckedIn], 200);
+        return response()->json(['message' => 'meal deatails', 
+        'totalBreakfast' => $totalBreakfast,
+        'totalBreakfastCheckedIn' => $totalBreakfastCheckedIn, 
+        'totalLunch' => $totalLunch ,
+        'totalLunchCheckedIn' => $totalLunchCheckedIn ,
+        'totalDinner' => $totalDinner, 
+        'totalDinnerCheckedIn' => $totalDinnerCheckedIn], 200);
     }
 
     public function todayBookingList(Request $request)
     {
         
         $users = User::where('role', 1)->get();
-        // $today = Carbon::today();
+        $meal=$request->meal;
 
-        // $bookings = Booking::whereIn('user_id', $users->pluck('id'))
-        // ->whereDate('created_at', $today)
-        // ->latest()->get();
-
-        $yesterday = now()->subDay(); 
+        $today = now(); 
         $bookings = Booking::whereIn('user_id', $users->pluck('id'))
-            ->whereDate('created_at', $yesterday)
-            ->where('breakfast', '=', '1')
+            ->whereDate('date', $today)
+            ->where($meal, '=', '1')
             ->latest()
             ->get();
+
+        $checkin = Booking::whereIn('user_id', $users->pluck('id'))
+        ->whereDate('date', $today)
+        ->where($meal, '=', '2')
+        ->latest()
+        ->get();
         
-        return response()->json(['message' => 'meal deatails', 'bookings' => $bookings], 200);
+        return response()->json(['message' => 'meal deatails', 'bookings' => $bookings, 'checkin' => $checkin], 200);
     }
 
 
