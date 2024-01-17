@@ -36,25 +36,42 @@ class AuthController extends Controller
     }
 
     public function login(Request $request)
-    {
-        $validator = Validator::make($request->all(), [
-            'mobile' => 'required',
-            'password' => 'required',
-        ]);
+{
+    $validator = Validator::make($request->all(), [
+        'role' => 'required',
+        'mobile' => 'required',
+        'password' => 'required',
+    ]);
 
-        if ($validator->fails()) {
-            return response()->json(['message' => $validator->errors()], 200);
-        }
-
-        if (Auth::attempt(['mobile' => $request->input('mobile'), 'password' => $request->input('password')])) {
-            $user = Auth::user();
-            $token = $user->createToken('MyApp')->plainTextToken;
-
-            return response()->json(['id'=>$user->id, 'token' => $token, 'name' => $user->name,'bp_number' => $user->bp_num, 'image' => $user->image, 'rank' => $user->rank,'message' => 'Login successful'], 200);
-        } else {
-            return response()->json(['message' => 'Invalid credentials'], 200);
-        }
+    if ($validator->fails()) {
+        return response()->json(['message' => $validator->errors()], 200);
     }
+
+    if (Auth::attempt($request->only('role', 'mobile', 'password'))) {
+        $user = Auth::user();
+
+        $userData = [
+            'token' => $user->createToken('MyApp')->plainTextToken,
+            'name' => $user->name,
+            'role' => $user->role,
+            'message' => 'Login successful',
+        ];
+
+        if ($user->role == 2) {
+            return response()->json($userData, 200);
+        } else {
+            $userData['id'] = $user->id;
+            $userData['bp_number'] = $user->bp_num;
+            $userData['image'] = $user->image;
+            $userData['rank'] = $user->rank;
+
+            return response()->json($userData, 200);
+        }
+    } else {
+        return response()->json(['message' => 'Invalid credentials'], 200);
+    }
+}
+
 
     public function logout(Request $request)
     {
