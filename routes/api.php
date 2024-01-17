@@ -28,5 +28,5 @@ Route::group(['middleware' => 'auth:sanctum'], function () {
 Route::get('/booking-list', [BookingController::class, 'index']);    
 Route::post('/booking', [BookingController::class, 'store']);
 Route::get('/today-booking-count', [BookingController::class, 'todayBookingCount']);
-Route::get('/today-booking-list', [BookingController::class, 'todayBookingList']);
+Route::post('/today-booking-list', [BookingController::class, 'todayBookingList']);
 });
