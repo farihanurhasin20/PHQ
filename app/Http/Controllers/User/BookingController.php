@@ -36,6 +36,7 @@ class BookingController extends Controller
     public function store(Request $request)
     {
         $validator = Validator::make($request->all(), [
+            'user_id' => 'required|string',
             'date' => 'required|string',
             'breakfast' => 'nullable|string',
             'b_scan' => 'nullable|string',
@@ -92,56 +93,53 @@ class BookingController extends Controller
     {
         
         $today = Carbon::today();
-    
-        $totalBreakfast = Booking::where('breakfast', '=', '1')
-        ->whereDate('date', $today)
-        ->count();
-        $totalBreakfastCheckedIn = Booking::where('breakfast', '=', '2')
-        ->whereDate('date', $today)
-        ->count();
-        $totalLunch = Booking::where('lunch', '=', '1')
-        ->whereDate('date', $today)
-        ->count();
-        $totalLunchCheckedIn = Booking::where('lunch', '=', '2')
-        ->whereDate('date', $today)
-        ->count();
-        $totalDinner = Booking::where('dinner', '=', '1')
-        ->whereDate('date', $today)
-        ->count();
-        $totalDinnerCheckedIn = Booking::where('dinner', '=', '2')
-        ->whereDate('date', $today)
-        ->count();
+        $tomorrow = Carbon::tomorrow();
         
-        return response()->json(['message' => 'meal deatails', 
-        'totalBreakfast' => $totalBreakfast,
-        'totalBreakfastCheckedIn' => $totalBreakfastCheckedIn, 
-        'totalLunch' => $totalLunch ,
-        'totalLunchCheckedIn' => $totalLunchCheckedIn ,
-        'totalDinner' => $totalDinner, 
-        'totalDinnerCheckedIn' => $totalDinnerCheckedIn], 200);
+        // Counts for today
+        $todayCounts = [
+            'totalBreakfast' => Booking::where('breakfast', '=', '1')->whereDate('date', $today)->count(),
+            'totalBreakfastCheckedIn' => Booking::where('breakfast', '=', '2')->whereDate('date', $today)->count(),
+            'totalLunch' => Booking::where('lunch', '=', '1')->whereDate('date', $today)->count(),
+            'totalLunchCheckedIn' => Booking::where('lunch', '=', '2')->whereDate('date', $today)->count(),
+            'totalDinner' => Booking::where('dinner', '=', '1')->whereDate('date', $today)->count(),
+            'totalDinnerCheckedIn' => Booking::where('dinner', '=', '2')->whereDate('date', $today)->count(),
+        ];
+        
+        // Counts for tomorrow
+        $tomorrowCounts = [
+            'totalBreakfast' => Booking::where('breakfast', '=', '1')->whereDate('date', $tomorrow)->count(),
+            'totalBreakfastCheckedIn' => Booking::where('breakfast', '=', '2')->whereDate('date', $tomorrow)->count(),
+            'totalLunch' => Booking::where('lunch', '=', '1')->whereDate('date', $tomorrow)->count(),
+            'totalLunchCheckedIn' => Booking::where('lunch', '=', '2')->whereDate('date', $tomorrow)->count(),
+            'totalDinner' => Booking::where('dinner', '=', '1')->whereDate('date', $tomorrow)->count(),
+            'totalDinnerCheckedIn' => Booking::where('dinner', '=', '2')->whereDate('date', $tomorrow)->count(),
+        ];
+        
+        return response()->json([
+            'today' => $todayCounts,
+            'tomorrow' => $tomorrowCounts,
+        ], 200);
+        
     }
 
     public function todayBookingList(Request $request)
     {
-        
+        $user = Auth::user();
+        if ($user && $user->role == 2) {
         $users = User::where('role', 1)->get();
         $meal=$request->meal;
 
         $today = now(); 
         $bookings = Booking::whereIn('user_id', $users->pluck('id'))
-            ->whereDate('date', $today)
-            ->where($meal, '=', '1')
-            ->latest()
-            ->get();
-
-        $checkin = Booking::whereIn('user_id', $users->pluck('id'))
         ->whereDate('date', $today)
-        ->where($meal, '=', '2')
-        ->latest()
-        ->get();
+        ->where(function ($query) use ($meal) {
+            $query->where($meal, '1')->orWhere($meal, '2');
+        })->latest()->get();
+    
         
-        return response()->json(['message' => 'meal deatails', 'bookings' => $bookings, 'checkin' => $checkin], 200);
+        return response()->json(['message' => 'meal deatails', 'bookings' => $bookings], 200);
+    } else {
+        return response()->json(['message' => 'Unauthorized'], 401);
     }
 
-
-}
+    } }

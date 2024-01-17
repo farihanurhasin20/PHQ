@@ -38,7 +38,6 @@ class AuthController extends Controller
     public function login(Request $request)
 {
     $validator = Validator::make($request->all(), [
-        'role' => 'required',
         'mobile' => 'required',
         'password' => 'required',
     ]);
@@ -47,7 +46,7 @@ class AuthController extends Controller
         return response()->json(['message' => $validator->errors()], 200);
     }
 
-    if (Auth::attempt($request->only('role', 'mobile', 'password'))) {
+    if (Auth::attempt($request->only('mobile', 'password'))) {
         $user = Auth::user();
 
         $userData = [
