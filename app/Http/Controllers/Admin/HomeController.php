@@ -10,25 +10,41 @@ use Carbon\Carbon;
 class HomeController extends Controller
 {
     public function index(){
-        $yesterday = Carbon::yesterday();
+        $today = Carbon::today();
 
-        $totalBreakfast = Booking::where('breakfast', '=', '1')
-            ->whereDate('created_at', '=', $yesterday)
+        $totalBreakfastBooking = Booking::where('breakfast', '=', '1')
+            ->whereDate('date', '=', $today)
+            ->count();
+
+        $totalBreakfastCheckin = Booking::where('breakfast', '=', '2')
+        ->whereDate('date', '=', $today)
+        ->count();
+        
+        $totalLunchBooking = Booking::where('lunch', '=', '1')
+            ->whereDate('date', '=', $today)
+            ->count();
+
+        $totalLunchCheckin = Booking::where('lunch', '=', '2')
+        ->whereDate('date', '=', $today)
+        ->count();
+        
+        $totalDinnerBooking = Booking::where('dinner', '=', '1')
+            ->whereDate('date', '=', $today)
             ->count();
         
-        $totalLunch = Booking::where('lunch', '=', '1')
-            ->whereDate('created_at', '=', $yesterday)
-            ->count();
-        
-        $totalDinner = Booking::where('dinner', '=', '1')
-            ->whereDate('created_at', '=', $yesterday)
-            ->count();
-        
+
+        $totalDinnerCheckin = Booking::where('dinner', '=', '2')
+        ->whereDate('date', '=', $today)
+        ->count();
         
         return view('admin.dashboard',[
-            'totalBreakfast' => $totalBreakfast,
-            'totalLunch' => $totalLunch,
-            'totalDinner' => $totalDinner,
+            'totalBreakfastBooking' => $totalBreakfastBooking,
+            'totalLunchBooking' => $totalLunchBooking,
+            'totalDinnerBooking' => $totalDinnerBooking,
+
+            'totalBreakfastCheckin' => $totalBreakfastCheckin,
+            'totalLunchCheckin' => $totalLunchCheckin,
+            'totalDinnerCheckin' => $totalDinnerCheckin,
         ]);
     }
 

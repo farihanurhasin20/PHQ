@@ -11,6 +11,7 @@ class Booking extends Model
     protected $fillable = [
         'user_id',
         'date',
+        'booking_type',
         'breakfast',
         'b_scan',
         'lunch',
@@ -18,4 +19,9 @@ class Booking extends Model
         'dinner',
         'd_scan',
     ];
+
+    public function user()
+    {
+        return $this->belongsTo(User::class, 'user_id');
+    }
 }

@@ -25,8 +25,10 @@ Route::post('/login', [AuthController::class, 'login']);
 Route::post('/logout', [AuthController::class, 'logout'])->middleware('auth:sanctum');
 
 Route::group(['middleware' => 'auth:sanctum'], function () {
-Route::get('/booking-list', [BookingController::class, 'index']);    
+Route::get('/booking-list', [BookingController::class, 'index']);   
+Route::get('/user-list', [AuthController::class, 'index']);  
 Route::post('/booking', [BookingController::class, 'store']);
 Route::get('/today-booking-count', [BookingController::class, 'todayBookingCount']);
 Route::post('/today-booking-list', [BookingController::class, 'todayBookingList']);
+Route::post('/check-in', [BookingController::class, 'checkIn']);
 });

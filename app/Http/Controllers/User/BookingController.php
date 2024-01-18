@@ -38,22 +38,25 @@ class BookingController extends Controller
         $validator = Validator::make($request->all(), [
             'user_id' => 'required|string',
             'date' => 'required|string',
+            'booking_type'=>'nullable|string',
             'breakfast' => 'nullable|string',
             'b_scan' => 'nullable|string',
             'lunch' => 'nullable|string',
             'l_scan' => 'nullable|string',
             'dinner' => 'nullable|string',
             'd_scan' => 'nullable|string',
+
         ]);
     
         if ($validator->fails()) {
             return response()->json(['error' => $validator->errors()], 200);
         }
-        $user = Auth::user();
-        $today = Carbon::today();
-        $bookings = Booking::where('user_id', $user->id)
-        ->whereDate('created_at', $request->date)
+        // $user = Auth::user();
+        // $today = Carbon::today();
+        $bookings = Booking::where('user_id', $request->user_id)
+        ->whereDate('date', $request->date)
         ->get()->first();
+
 
         
         if ($bookings != null) {
@@ -64,7 +67,7 @@ class BookingController extends Controller
         $bookingData = $request->all();
     
         $userId = Auth::id();
-        $bookingData['user_id'] = $userId;
+        
     
         // if (!empty($bookingData['breakfast'])) {
         //     $bookingData['b_scan'] = $this->generateQRCode($bookingData['date'], $userId, 'b');
@@ -126,20 +129,63 @@ class BookingController extends Controller
     {
         $user = Auth::user();
         if ($user && $user->role == 2) {
-        $users = User::where('role', 1)->get();
-        $meal=$request->meal;
-
-        $today = now(); 
-        $bookings = Booking::whereIn('user_id', $users->pluck('id'))
-        ->whereDate('date', $today)
-        ->where(function ($query) use ($meal) {
-            $query->where($meal, '1')->orWhere($meal, '2');
-        })->latest()->get();
-    
+            $users = User::where('role', 1)->get();
+            $meal = $request->meal;
+            $date = $request->date;
         
-        return response()->json(['message' => 'meal deatails', 'bookings' => $bookings], 200);
-    } else {
-        return response()->json(['message' => 'Unauthorized'], 401);
+            $bookings = Booking::whereIn('user_id', $users->pluck('id'))
+                ->whereDate('date', $date)
+                ->where(function ($query) use ($meal) {
+                    $query->where($meal, '1')->orWhere($meal, '2');
+                })
+                ->latest()
+                ->with('user') // Load the related user information
+                ->get();
+        
+            // Transform the result to include user names and images
+            $bookings = $bookings->map(function ($booking) {
+                return [
+                    'booking' => $booking,
+                    // Add other fields as needed
+                ];
+            });
+        
+            return response()->json(['message' => 'Meal details', 'bookings' => $bookings], 200);
+        } else {
+            return response()->json(['message' => 'Unauthorized'], 401);
+        }
+        
+
     }
 
-    } }
+    public function checkIN(Request $request){
+        $user = Auth::user();
+        $parts = explode('-', $request->qrcode);
+      
+        $lastPart = end($parts);
+        //  dd($lastPart); // breakfast
+        if ($user && $user->role == 2) {
+            $mealTypes = ['b_scan' => 'breakfast', 'l_scan' => 'lunch', 'd_scan' => 'dinner'];
+    
+            foreach ($mealTypes as $scanField => $mealType) {
+                if($mealType == $lastPart){
+                $booking = Booking::where($scanField, $request->qrcode)->first();
+            if($booking->$mealType = 2){
+                return response()->json(['message' => 'already exists'], 200);
+            }
+                if ($booking) {
+                    $booking->$mealType = 2;
+                    $booking->save();
+    
+                    return response()->json(['message' => $mealType . 'successfully checkedIn'], 200);
+                }
+            }
+        }
+            return response()->json(['message' => 'Failed CheckedIn'], 200);
+        }
+    
+        return response()->json(['message' => 'Unauthorized'], 401);
+    }
+    
+
+}
