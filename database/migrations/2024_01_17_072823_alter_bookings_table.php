@@ -11,7 +11,10 @@ return new class extends Migration
      */
     public function up(): void
     {
-        //
+        Schema::table('bookings', function (Blueprint $table) {
+            $table->string('booking_type')->nullable()->after('date');
+           
+        });
     }
 
     /**
@@ -19,6 +22,8 @@ return new class extends Migration
      */
     public function down(): void
     {
-        //
+        Schema::table('bookings', function (Blueprint $table) {
+            $table->dropColumn('booking_type');   
+        });
     }
 };

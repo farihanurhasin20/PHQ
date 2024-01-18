@@ -19,9 +19,9 @@ class AdminBookingListController extends Controller
         // ->whereDate('created_at', $today)
         // ->latest()->get();
 
-        $yesterday = now()->subDay(); 
+        $today = Carbon::today();
         $bookings = Booking::whereIn('user_id', $users->pluck('id'))
-            ->whereDate('created_at', $yesterday)
+            ->whereDate('date', $today)
             ->latest()
             ->get();
         
