@@ -33,7 +33,24 @@ class AuthController extends Controller
         ]);
 
         if ($validator->fails()) {
-            return response()->json(['message' => $validator->errors()], 200);
+            $errors = $validator->errors();
+        
+            $errorMessages = [];
+        
+            // Check each field for specific error messages
+            if ($errors->has('mobile')) {
+                $errorMessages[] = $errors->first('mobile');
+            }
+        
+            if ($errors->has('bp_num')) {
+                $errorMessages[] = $errors->first('bp_num');
+            }
+        
+            // Add other fields as needed
+        
+            $responseMessage = implode(' and ', $errorMessages);
+            
+            return response()->json(['message' => $responseMessage], 200);
         }
 
         $userData = $request->all();
