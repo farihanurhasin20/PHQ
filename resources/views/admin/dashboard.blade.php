@@ -7,8 +7,9 @@
             <div class="col-sm-6">
                 <h1>Booked For Today</h1>
             </div>
-            <div class="col-sm-6">
-                <!-- Add any additional content for the right side if needed -->
+            
+            <div class="col-sm-6 text-right">
+                <p>{{ \Carbon\Carbon::now()->format('l, F j, Y') }}</p>
             </div>
         </div>
     </div>

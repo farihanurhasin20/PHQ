@@ -100,21 +100,21 @@ class BookingController extends Controller
         
         // Counts for today
         $todayCounts = [
-            'totalBreakfast' => Booking::where('breakfast', '=', '1')->whereDate('date', $today)->count(),
+            'totalBreakfast' => Booking::whereNotNull('breakfast')->whereDate('date', $today)->count(),
             'totalBreakfastCheckedIn' => Booking::where('breakfast', '=', '2')->whereDate('date', $today)->count(),
-            'totalLunch' => Booking::where('lunch', '=', '1')->whereDate('date', $today)->count(),
+            'totalLunch' => Booking::whereNotNull('lunch')->whereDate('date', $today)->count(),
             'totalLunchCheckedIn' => Booking::where('lunch', '=', '2')->whereDate('date', $today)->count(),
-            'totalDinner' => Booking::where('dinner', '=', '1')->whereDate('date', $today)->count(),
+            'totalDinner' => Booking::whereNotNull('dinner')->whereDate('date', $today)->count(),
             'totalDinnerCheckedIn' => Booking::where('dinner', '=', '2')->whereDate('date', $today)->count(),
         ];
         
         // Counts for tomorrow
         $tomorrowCounts = [
-            'totalBreakfast' => Booking::where('breakfast', '=', '1')->whereDate('date', $tomorrow)->count(),
+            'totalBreakfast' => Booking::whereNotNull('breakfast')->whereDate('date', $tomorrow)->count(),
             'totalBreakfastCheckedIn' => Booking::where('breakfast', '=', '2')->whereDate('date', $tomorrow)->count(),
-            'totalLunch' => Booking::where('lunch', '=', '1')->whereDate('date', $tomorrow)->count(),
+            'totalLunch' => Booking::whereNotNull('lunch')->whereDate('date', $tomorrow)->count(),
             'totalLunchCheckedIn' => Booking::where('lunch', '=', '2')->whereDate('date', $tomorrow)->count(),
-            'totalDinner' => Booking::where('dinner', '=', '1')->whereDate('date', $tomorrow)->count(),
+            'totalDinner' => Booking::whereNotNull('dinner')->whereDate('date', $tomorrow)->count(),
             'totalDinnerCheckedIn' => Booking::where('dinner', '=', '2')->whereDate('date', $tomorrow)->count(),
         ];
         
@@ -170,14 +170,16 @@ class BookingController extends Controller
             foreach ($mealTypes as $scanField => $mealType) {
                 if($mealType == $lastPart){
                 $booking = Booking::where($scanField, $request->qrcode)->first();
-            if($booking->$mealType = 2){
+               
+            if($booking->$mealType == 2){
+                
                 return response()->json(['message' => 'already exists'], 200);
             }
                 if ($booking) {
                     $booking->$mealType = 2;
                     $booking->save();
     
-                    return response()->json(['message' => $mealType . 'successfully checkedIn'], 200);
+                    return response()->json(['message' => $mealType . ' successfully checkedIn'], 200);
                 }
             }
         }
