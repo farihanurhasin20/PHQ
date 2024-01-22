@@ -4,7 +4,7 @@
     <div class="container-fluid my-2">
         <div class="row mb-2">
             <div class="col-sm-6">
-                <h1>Today's booking list</h1>
+                <h1>Today's Breakfast list</h1>
             </div>
             <div class="col-sm-6 text-right">
                 <p>{{ \Carbon\Carbon::now()->format('l, F j, Y') }}</p>
@@ -28,9 +28,8 @@
                             <tr>
                                 <th>Bp_num</th>
                                 <th>Name</th>
-                                <th>Breakfast</th>
-                                <th>Lunch</th>
-                                <th>Dinner</th>
+                                <th>Booked</th>
+                                <th>Checked In</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -49,14 +48,7 @@
                                         @endif
                                     </td>
                                     <td>
-                                        @if ($userBooking && $userBooking->lunch)
-                                            <i class="fas fa-check text-success"></i>
-                                        @else
-                                            <i class="fas fa-times text-danger"></i>
-                                        @endif
-                                    </td>
-                                    <td>
-                                        @if ($userBooking && $userBooking->dinner)
+                                        @if ($userBooking && $userBooking->breakfast == 2)
                                             <i class="fas fa-check text-success"></i>
                                         @else
                                             <i class="fas fa-times text-danger"></i>

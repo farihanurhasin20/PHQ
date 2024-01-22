@@ -11,40 +11,65 @@ class HomeController extends Controller
 {
     public function index(){
         $today = Carbon::today();
+        $tomorrow = Carbon::tomorrow();
 
-        $totalBreakfastBooking = Booking::where('breakfast', '=', '1')
+        $todayBreakfastBooking = Booking::whereNotNull('breakfast')
             ->whereDate('date', '=', $today)
             ->count();
+        $tomorrowBreakfastBooking = Booking::whereNotNull('breakfast')
+        ->whereDate('date', '=', $tomorrow)
+        ->count();
 
-        $totalBreakfastCheckin = Booking::where('breakfast', '=', '2')
+        $todayBreakfastCheckin = Booking::where('breakfast', '=', '2')
         ->whereDate('date', '=', $today)
         ->count();
-        
-        $totalLunchBooking = Booking::where('lunch', '=', '1')
-            ->whereDate('date', '=', $today)
-            ->count();
-
-        $totalLunchCheckin = Booking::where('lunch', '=', '2')
-        ->whereDate('date', '=', $today)
+        $tomorrowBreakfastCheckin = Booking::where('breakfast', '=', '2')
+        ->whereDate('date', '=', $tomorrow)
         ->count();
         
-        $totalDinnerBooking = Booking::where('dinner', '=', '1')
+        $todayLunchBooking = Booking::whereNotNull('lunch')
             ->whereDate('date', '=', $today)
             ->count();
+        $tomorrowLunchBooking = Booking::whereNotNull('lunch')
+        ->whereDate('date', '=', $tomorrow)
+        ->count();
+
+        $todayLunchCheckin = Booking::where('lunch', '=', '2')
+        ->whereDate('date', '=', $today)
+        ->count();
+        $tomorrowLunchCheckin = Booking::where('lunch', '=', '2')
+        ->whereDate('date', '=', $tomorrow)
+        ->count();
+        
+        $todayDinnerBooking = Booking::whereNotNull('dinner')
+            ->whereDate('date', '=', $today)
+            ->count();
+        $tomorrowDinnerBooking = Booking::whereNotNull('dinner')
+        ->whereDate('date', '=', $tomorrow)
+        ->count();
         
 
-        $totalDinnerCheckin = Booking::where('dinner', '=', '2')
+        $todayDinnerCheckin = Booking::where('dinner', '=', '2')
         ->whereDate('date', '=', $today)
+        ->count();
+        $tomorrowDinnerCheckin = Booking::where('dinner', '=', '2')
+        ->whereDate('date', '=', $tomorrow)
         ->count();
         
         return view('admin.dashboard',[
-            'totalBreakfastBooking' => $totalBreakfastBooking,
-            'totalLunchBooking' => $totalLunchBooking,
-            'totalDinnerBooking' => $totalDinnerBooking,
+            'todayBreakfastBooking' => $todayBreakfastBooking,
+            'todayLunchBooking' => $todayLunchBooking,
+            'todayDinnerBooking' => $todayDinnerBooking,
+            'todayBreakfastCheckin' => $todayBreakfastCheckin,
+            'todayLunchCheckin' => $todayLunchCheckin,
+            'todayDinnerCheckin' => $todayDinnerCheckin,
 
-            'totalBreakfastCheckin' => $totalBreakfastCheckin,
-            'totalLunchCheckin' => $totalLunchCheckin,
-            'totalDinnerCheckin' => $totalDinnerCheckin,
+            'tomorrowBreakfastBooking' => $tomorrowBreakfastBooking,
+            'tomorrowLunchBooking' => $tomorrowLunchBooking,
+            'tomorrowDinnerBooking' => $tomorrowDinnerBooking,
+            'tomorrowBreakfastCheckin' => $tomorrowBreakfastCheckin,
+            'tomorrowLunchCheckin' => $tomorrowLunchCheckin,
+            'tomorrowDinnerCheckin' => $tomorrowDinnerCheckin,
         ]);
     }
 
