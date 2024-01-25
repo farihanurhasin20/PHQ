@@ -9,6 +9,13 @@ use Illuminate\Support\Facades\Validator;
 
 class MealTimeController extends Controller
 {
+    public function api_index()
+    {
+        $mealTimes = MealTime::all();
+        
+        return response()->json(['data' => $mealTimes], 200);
+    }
+    
     public function index()
     {
         $mealTimes = MealTime::all();

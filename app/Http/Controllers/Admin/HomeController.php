@@ -73,6 +73,10 @@ class HomeController extends Controller
         ]);
     }
 
+    public function masterdata_index(){
+        return view ('admin.masterdata');
+    }
+
     public function logout(){
         Auth::guard('admin')->logout();
         return redirect()->route('admin.login');

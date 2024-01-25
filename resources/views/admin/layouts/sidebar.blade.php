@@ -25,12 +25,21 @@
                         <p>Users</p>
                     </a>
                 </li>
+
                 <li class="nav-item">
-                    <a href="{{ route('meal-times.index') }}" class="nav-link">
-                        <i class="nav-icon fas fa-clock"></i>
-                        <p>Meal Time</p>
+                    <a href="{{ route('admin.masterdata') }}" class="nav-link">
+                        <i class="nav-icon fas fa-sitemap"></i>
+                        <p>Master Data</p>
                     </a>
                 </li>
+
+                <li class="nav-item">
+                    <a href="{{ route('admin.masterdata') }}" class="nav-link">
+                        <i class="nav-icon fas fa-cart-plus"></i>
+                        <p>Local Purchase</p>
+                    </a>
+                </li>
+
                 <li class="nav-item">
                     <a href="{{ route('bookings.breakfast-list') }}" class="nav-link">
                         <i class="nav-icon fas fa-coffee"></i>

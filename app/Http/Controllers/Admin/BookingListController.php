@@ -16,6 +16,11 @@ class BookingListController extends Controller
     
         return view('admin.users.list', compact('users'));
     }
+
+    public function create()
+    {
+        return view('admin.users.create');
+    }
     
 
     public function edit($id){
@@ -23,6 +28,51 @@ class BookingListController extends Controller
         // dd($users);
         return view('admin.users.edit',compact('users'));
 
+    }
+
+    public function store(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'name' => 'nullable',
+            'mobile' => 'required|unique:users,mobile',
+            'bp_num' => 'required|unique:users,bp_num|min:10',
+            'password' => 'required|min:6',
+            'rank' => 'nullable',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif',
+        ]);
+
+        if ($validator->passes()) {
+            // Create a new user instance
+            $user = new User([
+                'name' => $request->input('name'),
+                'mobile' => $request->input('mobile'),
+                'bp_num' => $request->input('bp_num'),
+                'password' => $request->input('password'),
+                'rank' => $request->input('rank'),
+            ]);
+
+            // Handle image upload and save as base64
+            if ($request->hasFile('image')) {
+                $image = $request->file('image');
+                $base64Image = base64_encode(file_get_contents($image->path()));
+                $user->image = 'data:' . $image->getMimeType() . ';base64,' . $base64Image;
+            }
+            
+            // Save the user to the database
+            $user->save();
+
+            $request->session()->flash('success', 'User created successfully');
+
+            return response()->json([
+                'status' => true,
+                'message' => 'User created successfully',
+            ]);
+        } else {
+            return response()->json([
+                'status' => false,
+                'errors' => $validator->errors(),
+            ]);
+        }
     }
 
     public function update(Request $request, $id){

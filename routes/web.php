@@ -4,7 +4,8 @@ use App\Http\Controllers\Admin\AdminBookingListController;
 use App\Http\Controllers\Admin\HomeController;
 use App\Http\Controllers\Admin\LoginController;
 use App\Http\Controllers\Admin\BookingListController;
-use App\Http\Controllers\admin\MealTimeController;
+use App\Http\Controllers\admin\MasterDataController;
+use App\Http\Controllers\Admin\MealTimeController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -31,7 +32,10 @@ Route::group(['prefix' => 'admin'], function () {
 
    Route::group(['middleware' => 'admin.auth'],function(){
         Route::get('/dashboard', [HomeController::class, 'index'])->name('admin.dashboard');
+        Route::get('/masterdata', [HomeController::class, 'masterdata_index'])->name('admin.masterdata');
         Route::get('/list', [BookingListController::class, 'index'])->name('users.list');
+        Route::get('/list/create', [BookingListController::class, 'create'])->name('users.create');
+        Route::post('/list', [BookingListController::class, 'store'])->name('users.store');
         Route::get('/edit/{id}', [BookingListController::class, 'edit'])->name('users.edit');
         Route::put('/update/{id}', [BookingListController::class, 'update'])->name('users.update');
 
@@ -46,6 +50,26 @@ Route::group(['prefix' => 'admin'], function () {
         Route::get('/meal-times', [MealTimeController::class, 'index'])->name('meal-times.index');
         Route::get('/meal-times/{id}/edit', [MealTimeController::class, 'edit'])->name('meal-times.edit');
         Route::put('/meal-times/{id}', [MealTimeController::class, 'update'])->name('meal-times.update');
+
+        //founding source 
+        Route::get('/funding_sources', [MasterDataController::class, 'fund_index'])->name('funding_sources.index');
+        Route::get('/funding_sources/create', [MasterDataController::class, 'fund_create'])->name('funding_sources.create');
+        Route::post('/funding_sources', [MasterDataController::class, 'fund_store'])->name('funding_sources.store');
+
+        //available funding
+        Route::get('/fund_history', [MasterDataController::class, 'fund_history_index'])->name('fund_history.index');
+        Route::get('/fund_history/create', [MasterDataController::class, 'fund_history_create'])->name('fund_history.create');
+        Route::post('/fund_history', [MasterDataController::class, 'fund_history_store'])->name('fund_history.store');
+
+        //item units source 
+        Route::get('/item_units', [MasterDataController::class, 'unit_index'])->name('units.index');
+        Route::get('/item_units/create', [MasterDataController::class, 'unit_create'])->name('units.create');
+        Route::post('/item_units', [MasterDataController::class, 'unit_store'])->name('units.store');
+
+        //Item
+        Route::get('/items', [MasterDataController::class, 'item_index'])->name('items.index');
+        Route::get('/items/create', [MasterDataController::class, 'item_create'])->name('items.create');
+        Route::post('/items', [MasterDataController::class, 'item_store'])->name('items.store');
 
 
     });
