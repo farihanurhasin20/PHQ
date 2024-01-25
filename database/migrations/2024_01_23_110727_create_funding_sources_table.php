@@ -11,9 +11,10 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('bookings', function (Blueprint $table) {
-            $table->string('booking_type')->nullable()->after('date');
-           
+        Schema::create('funding_sources', function (Blueprint $table) {
+            $table->id();
+            $table->string('source')->unique();
+            $table->timestamps();
         });
     }
 
@@ -22,8 +23,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('bookings', function (Blueprint $table) {
-            $table->dropColumn('booking_type');   
-        });
+        Schema::dropIfExists('funding_sources');
     }
 };

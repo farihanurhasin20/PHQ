@@ -25,10 +25,37 @@
                         <p>Users</p>
                     </a>
                 </li>
+
                 <li class="nav-item">
-                    <a href="{{ route('bookings.list') }}" class="nav-link">
-                        <i class="nav-icon far fa-calendar-alt"></i>
-                        <p>Bookings</p>
+                    <a href="{{ route('admin.masterdata') }}" class="nav-link">
+                        <i class="nav-icon fas fa-sitemap"></i>
+                        <p>Master Data</p>
+                    </a>
+                </li>
+
+                <li class="nav-item">
+                    <a href="{{ route('admin.masterdata') }}" class="nav-link">
+                        <i class="nav-icon fas fa-cart-plus"></i>
+                        <p>Local Purchase</p>
+                    </a>
+                </li>
+
+                <li class="nav-item">
+                    <a href="{{ route('bookings.breakfast-list') }}" class="nav-link">
+                        <i class="nav-icon fas fa-coffee"></i>
+                        <p>Breakfast</p>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="{{ route('bookings.lunch-list') }}" class="nav-link">
+                        <i class="nav-icon fas fa-utensils"></i>
+                        <p>Lunch</p>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="{{ route('bookings.dinner-list') }}" class="nav-link">
+                        <i class="nav-icon fas fa-hamburger"></i>
+                        <p>Dinner</p>
                     </a>
                 </li>
             </ul>

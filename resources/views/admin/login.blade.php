@@ -25,7 +25,7 @@
 					<form action="{{route('admin.authenticate')}}" method="post">
 						@csrf
 				  		<div class="input-group mb-3">
-							<input type="number" name="mobile" id="mobile" class="form-control" @error('email') is-invalid @enderror placeholder="Mobile Number" >
+							<input type="number" name="mobile" id="mobile" class="form-control" @error('mobile') is-invalid @enderror placeholder="Mobile Number" >
 							<div class="input-group-append">
 					  			<div class="input-group-text">
 									<span class="fas fa-envelope"></span>

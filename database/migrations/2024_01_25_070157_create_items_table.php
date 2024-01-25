@@ -11,9 +11,12 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('bookings', function (Blueprint $table) {
-            $table->string('booking_type')->nullable()->after('date');
-           
+        Schema::create('items', function (Blueprint $table) {
+            $table->id();
+            $table->foreignId('item_units_id')->constrained()->onDelete('cascade');
+            $table->string('item_code')->nullable();
+            $table->string('item_name');
+            $table->timestamps();
         });
     }
 
@@ -22,8 +25,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('bookings', function (Blueprint $table) {
-            $table->dropColumn('booking_type');   
-        });
+        Schema::dropIfExists('items');
     }
 };

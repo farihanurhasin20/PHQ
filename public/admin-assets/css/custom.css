@@ -22,7 +22,22 @@
   margin-right: auto;
 }
 
+.small-box:hover {
+  box-shadow: 0 0 30px #fff, 0 0 10px #99d6ff, 0 0 15px #99d6ff, 0 0 20px #99d6ff;
+  animation: neonGlow 1.5s infinite alternate;
+}
 
-/* .select2-container--default .select2-selection--multiple .select2-selection__rendered li{
-    color:#000;
-} */
+@keyframes neonGlow {
+  to {
+      box-shadow: 0 0 30px #fff, 0 0 10px #99d6ff, 0 0 15px #99d6ff, 0 0 20px #99d6ff;
+  }
+}
+
+.card-link {
+  color: black;  
+}
+.card-link:hover {
+  color: rgb(53, 53, 53); 
+}
+
+

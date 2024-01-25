@@ -11,6 +11,16 @@ use Illuminate\Support\Facades\Validator;
 
 class AuthController extends Controller
 {
+
+    public function index()
+{
+    $user = Auth::user();
+    if ($user && $user->role == 2) {
+    $users = User::where('role', 1)->get();
+    return response()->json(['data' => $users], 200);
+    }
+}
+
     public function register(Request $request)
     {
         $validator = Validator::make($request->all(), [
@@ -23,7 +33,24 @@ class AuthController extends Controller
         ]);
 
         if ($validator->fails()) {
-            return response()->json(['message' => $validator->errors()], 200);
+            $errors = $validator->errors();
+        
+            $errorMessages = [];
+        
+            // Check each field for specific error messages
+            if ($errors->has('mobile')) {
+                $errorMessages[] = $errors->first('mobile');
+            }
+        
+            if ($errors->has('bp_num')) {
+                $errorMessages[] = $errors->first('bp_num');
+            }
+        
+            // Add other fields as needed
+        
+            $responseMessage = implode(' and ', $errorMessages);
+            
+            return response()->json(['message' => $responseMessage], 200);
         }
 
         $userData = $request->all();
