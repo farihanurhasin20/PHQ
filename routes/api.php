@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\admin\MealTimeController;
 use App\Http\Controllers\User\AuthController;
 use App\Http\Controllers\User\BookingController;
 use Illuminate\Http\Request;
@@ -26,6 +27,7 @@ Route::post('/logout', [AuthController::class, 'logout'])->middleware('auth:sanc
 
 Route::group(['middleware' => 'auth:sanctum'], function () {
 Route::get('/booking-list', [BookingController::class, 'index']);   
+Route::get('/time-list', [MealTimeController::class, 'api_index']); 
 Route::get('/user-list', [AuthController::class, 'index']);  
 Route::post('/booking', [BookingController::class, 'store']);
 Route::get('/today-booking-count', [BookingController::class, 'todayBookingCount']);

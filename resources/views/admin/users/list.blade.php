@@ -6,9 +6,11 @@
                 <div class="col-sm-6">
                     <h1>Users list</h1>
                 </div>
-                {{-- <div class="col-sm-6 text-right">
-                    <a href="{{route('products.create')}}" class="btn btn-primary">New Product</a>
-                </div> --}}
+                <div class="col-sm-6 text-right">
+                <a href="{{ route('users.create') }}" class="btn btn-primary">
+                    <i class="fas fa-user-plus"></i> Add User
+                </a>
+                </div>
             </div>
         </div>
         <!-- /.container-fluid -->
