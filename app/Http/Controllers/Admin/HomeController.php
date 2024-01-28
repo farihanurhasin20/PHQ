@@ -77,6 +77,10 @@ class HomeController extends Controller
         return view ('admin.masterdata');
     }
 
+    public function purchase_index(){
+        return view ('admin.purchase.list');
+    }
+
     public function logout(){
         Auth::guard('admin')->logout();
         return redirect()->route('admin.login');

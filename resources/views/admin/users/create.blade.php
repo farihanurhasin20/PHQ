@@ -71,8 +71,6 @@
                                             <label class="custom-file-label" for="image">Choose file</label>
                                         </div>
                                     </div>
-                                    
-                                    <!-- Error message container -->
                                     <p class="error"></p>
                                 </div>
                             </div>
