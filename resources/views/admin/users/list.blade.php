@@ -22,6 +22,26 @@
             @include('admin.message')
             <div class="card">
 
+                <form action="{{ route('users.list') }}" method="GET">
+                    @csrf
+                    <div class="card-header">
+                        <div class="card-title">
+                            <button type="button" onclick="window.location.href='{{ route("users.list") }}'" class="btn btn-default btn-sm">Reset</button>
+                        </div>
+                        <div class="card-tools">
+                            <div class="input-group input-group" style="width: 250px;">
+                                <input type="text" name="keyword" value="{{ Request::get('keyword') }}" class="form-control float-right" placeholder="Search">
+
+                                <div class="input-group-append">
+                                    <button type="submit" class="btn btn-default">
+                                        <i class="fas fa-search"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+
                 <div class="card-body table-responsive p-0">
                     <table class="table table-hover text-nowrap">
                         <thead>
