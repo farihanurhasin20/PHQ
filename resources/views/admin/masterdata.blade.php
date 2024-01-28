@@ -123,6 +123,22 @@
                 <div class="small-box card" style="padding-top: 20px;">
                     <div class="inner d-flex align-items-center justify-content-center">
                         <div class="col-lg-6 col-6 text-center">
+                            <h3><i class="fas fa-cart-arrow-down"></i></h3>
+                            <p>Purchase List</p>
+                        </div>
+                    </div>
+                    <div class="icon">
+                        <i class="ion ion-bag"></i>
+                    </div>
+                </div>
+                </a>
+            </div>
+
+            <div class="col-lg-3 col-md-6 col-sm-12">
+            <a href="{{ route('funding_sources.index') }}" class="card-link">
+                <div class="small-box card" style="padding-top: 20px;">
+                    <div class="inner d-flex align-items-center justify-content-center">
+                        <div class="col-lg-6 col-6 text-center">
                             <h3><i class="fas fa-download"></i></h3>
                             <p>Generate Report</p>
                         </div>

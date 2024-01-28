@@ -6,6 +6,7 @@ use App\Http\Controllers\Admin\LoginController;
 use App\Http\Controllers\Admin\BookingListController;
 use App\Http\Controllers\admin\MasterDataController;
 use App\Http\Controllers\Admin\MealTimeController;
+use App\Http\Controllers\Admin\PurchaseController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -32,8 +33,7 @@ Route::group(['prefix' => 'admin'], function () {
 
    Route::group(['middleware' => 'admin.auth'],function(){
         Route::get('/dashboard', [HomeController::class, 'index'])->name('admin.dashboard');
-        Route::get('/masterdata', [HomeController::class, 'masterdata_index'])->name('admin.masterdata');
-        Route::get('/purchase', [HomeController::class, 'purchase_index'])->name('admin.purchase');      
+        Route::get('/masterdata', [HomeController::class, 'masterdata_index'])->name('admin.masterdata');     
         Route::get('/list', [BookingListController::class, 'index'])->name('users.list');
         Route::get('/list/create', [BookingListController::class, 'create'])->name('users.create');
         Route::post('/list', [BookingListController::class, 'store'])->name('users.store');
@@ -71,6 +71,10 @@ Route::group(['prefix' => 'admin'], function () {
         Route::get('/items', [MasterDataController::class, 'item_index'])->name('items.index');
         Route::get('/items/create', [MasterDataController::class, 'item_create'])->name('items.create');
         Route::post('/items', [MasterDataController::class, 'item_store'])->name('items.store');
+
+        //Purchase
+        Route::get('/purchases/create', [PurchaseController::class, 'create'])->name('purchases.create');
+        Route::post('/purchases/store', [PurchaseController::class, 'store'])->name('purchases.store');
         
 
 

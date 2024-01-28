@@ -75,17 +75,26 @@ class MasterDataController extends Controller
             'total_amount' => 'required|numeric',
             'funding_source' => 'required',
         ]);
-
+    
         if ($validator->passes()) {
             $availableFunding = new AvailableFunding();
             $availableFunding->date = $request->input('date');
             $availableFunding->total_amount = $request->input('total_amount');
             $availableFunding->funding_source_id = $request->input('funding_source');
-
+    
+            // Retrieve the current_fund for the specified funding_source_id
+            $currentFund = FundingSource::where('id', $request->input('funding_source'))->value('current_fund');
+    
+            // Add the new total_amount to the existing current_fund
+            $newCurrentFund = $currentFund + $request->input('total_amount');
+    
+            // Update the current_fund in the FundingSource table
+            FundingSource::where('id', $request->input('funding_source'))->update(['current_fund' => $newCurrentFund]);
+    
             $availableFunding->save();
-
+    
             $request->session()->flash('success', 'New fund created successfully');
-
+    
             return response([
                 'status' => true,
                 'message' => 'New fund created successfully',
