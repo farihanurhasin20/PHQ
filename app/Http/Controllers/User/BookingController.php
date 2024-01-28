@@ -4,6 +4,7 @@ namespace App\Http\Controllers\User;
 
 use App\Http\Controllers\Controller;
 use App\Models\Booking;
+use App\Models\MealTime;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -92,6 +93,7 @@ class BookingController extends Controller
             $validator = Validator::make($request->all(), [
                 'user_id' => 'required|string',
                 'dates' => 'required|array',
+                'booking_type' => 'nullable',
                 'dates.*' => 'date', // Validate each date in the array
                 'breakfast' => 'nullable|string',
                 'b_scan' => 'nullable|array',
@@ -120,6 +122,7 @@ class BookingController extends Controller
                     'user_id' => $request->user_id,
                     'date' => $date,
                     'breakfast' => $request->breakfast,
+                    'booking_type' => $request->booking_type,
                     'b_scan' => $request->b_scan[$key] ?? null,
                     'lunch' => $request->lunch,
                     'l_scan' => $request->l_scan[$key] ?? null,
@@ -237,6 +240,58 @@ class BookingController extends Controller
         }
     
         return response()->json(['message' => 'Unauthorized'], 401);
+    }
+
+    public function meal_time($id){
+
+        $time = Carbon::now('Asia/Dhaka');
+        $formattedTime = $time->format('H:i:s');
+         
+        $mealInfo = MealTime::whereRaw('? BETWEEN start_time AND end_time', [$formattedTime])->first();
+       
+        if($mealInfo == null){
+                
+            return response()->json(['message' => 'No meal right now'], 200);
+        }  
+        $user = Auth::user();
+        $lastPart=$mealInfo->meal_type;
+          $today = Carbon::today();
+            $mealTypes = ['b_scan' => 'Breakfast', 'l_scan' => 'Lunch', 'd_scan' => 'Dinner'];
+    
+            foreach ($mealTypes as $scanField => $mealType) {
+                if($mealType == $lastPart){
+                $booking = Booking::where('user_id', $id)
+                ->whereDate('date', $today)
+                ->latest()->first();
+
+            if($booking == null){
+                return response()->json(['message' => 'No Meal Today'], 200);
+
+            }
+            $mealtype=strtolower($lastPart);
+          
+            if($booking->$mealtype == 2){
+                
+                return response()->json(['message' => 'Meal done'], 200);
+            } 
+            
+
+    
+                    return response()->json(['message' => $mealType , 'qrcode' => $booking->$scanField], 200);
+                }
+            }
+        
+        
+    
+
+    }
+    public function mealDates($id){
+        $today = Carbon::today();
+        $booking = Booking::where('user_id', $id)
+        ->whereMonth('date', $today)
+        ->get();
+        $bookingDates = $booking->pluck('date')->toArray();
+        return response()->json([ 'date' => $bookingDates], 200);
     }
     
 
