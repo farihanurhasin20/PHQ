@@ -34,7 +34,7 @@
                 </li>
 
                 <li class="nav-item">
-                    <a href="{{ route('admin.masterdata') }}" class="nav-link">
+                    <a href="{{ route('admin.purchase') }}" class="nav-link">
                         <i class="nav-icon fas fa-cart-plus"></i>
                         <p>Local Purchase</p>
                     </a>
