@@ -66,13 +66,18 @@ Route::group(['prefix' => 'admin'], function () {
         Route::get('/item_units', [MasterDataController::class, 'unit_index'])->name('units.index');
         Route::get('/item_units/create', [MasterDataController::class, 'unit_create'])->name('units.create');
         Route::post('/item_units', [MasterDataController::class, 'unit_store'])->name('units.store');
+        Route::get('/units/{id}/edit', [MasterDataController::class, 'unit_edit'])->name('units.edit');
+        Route::put('/units/{id}/update', [MasterDataController::class, 'unit_update'])->name('units.update');
 
         //Item
         Route::get('/items', [MasterDataController::class, 'item_index'])->name('items.index');
         Route::get('/items/create', [MasterDataController::class, 'item_create'])->name('items.create');
         Route::post('/items', [MasterDataController::class, 'item_store'])->name('items.store');
+        Route::get('/items/{id}/edit', [MasterDataController::class, 'item_edit'])->name('items.edit');
+        Route::put('/items/{id}/update', [MasterDataController::class, 'item_update'])->name('items.update');
 
         //Purchase
+        Route::get('/purchases', [PurchaseController::class, 'index'])->name('purchases.index');
         Route::get('/purchases/create', [PurchaseController::class, 'create'])->name('purchases.create');
         Route::post('/purchases/store', [PurchaseController::class, 'store'])->name('purchases.store');
         

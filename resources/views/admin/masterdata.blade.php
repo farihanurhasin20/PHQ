@@ -119,7 +119,7 @@
             </div>
 
             <div class="col-lg-3 col-md-6 col-sm-12">
-            <a href="{{ route('funding_sources.index') }}" class="card-link">
+            <a href="{{ route('purchases.index') }}" class="card-link">
                 <div class="small-box card" style="padding-top: 20px;">
                     <div class="inner d-flex align-items-center justify-content-center">
                         <div class="col-lg-6 col-6 text-center">
