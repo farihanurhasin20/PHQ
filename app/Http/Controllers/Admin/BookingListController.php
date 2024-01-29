@@ -10,9 +10,15 @@ use Illuminate\Support\Facades\Validator;
 
 class BookingListController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $users = User::where('role', 1)->latest()->paginate(10);
+        $users = User::where('role', 1)->latest();
+        if (!empty($request->get('keyword'))) {
+            $keyword = $request->get('keyword');
+            $users = $users->where('name', 'like', '%' . $keyword . '%');
+        }
+        // dd($users);
+        $users = $users->paginate(10);
     
         return view('admin.users.list', compact('users'));
     }

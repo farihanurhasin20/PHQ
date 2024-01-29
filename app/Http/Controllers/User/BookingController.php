@@ -246,16 +246,34 @@ class BookingController extends Controller
 
         $time = Carbon::now('Asia/Dhaka');
         $formattedTime = $time->format('H:i:s');
-         
+        $today = Carbon::today();
+        $bookings = Booking::where('user_id', $id)
+        ->whereDate('date', $today)
+        ->latest()->first();
+
+         if($bookings == null){
+        return response()->json(['message' => 'No Meal booked Today'], 200);
+
+         }
         $mealInfo = MealTime::whereRaw('? BETWEEN start_time AND end_time', [$formattedTime])->first();
        
+        
         if($mealInfo == null){
-                
-            return response()->json(['message' => 'No meal right now'], 200);
+            $mealInfoNext = MealTime::where('start_time', '>', $formattedTime)
+            ->orderBy('start_time')
+            ->first();
+            if ($mealInfoNext) {
+                $nextMealTime = Carbon::createFromFormat('H:i:s', $mealInfoNext->start_time)->format('h:i A');
+                $message = 'No meal right now. Next meal: ' . $mealInfoNext->meal_type . '. It will start from ' . $nextMealTime;
+            } else {
+                $message = 'No upcoming meals Today.';
+            }
+
+                return response()->json(['message' => $message], 200);
         }  
         $user = Auth::user();
         $lastPart=$mealInfo->meal_type;
-          $today = Carbon::today();
+          
             $mealTypes = ['b_scan' => 'Breakfast', 'l_scan' => 'Lunch', 'd_scan' => 'Dinner'];
     
             foreach ($mealTypes as $scanField => $mealType) {
@@ -270,10 +288,10 @@ class BookingController extends Controller
             }
             $mealtype=strtolower($lastPart);
           
-            if($booking->$mealtype == 2){
+            // if($booking->$mealtype == 2){
                 
-                return response()->json(['message' => 'Meal done'], 200);
-            } 
+            //     return response()->json(['message' => 'Meal done'], 200);
+            // } 
             
 
     
@@ -294,5 +312,33 @@ class BookingController extends Controller
         return response()->json([ 'date' => $bookingDates], 200);
     }
     
+    public function mealDatesCancel(Request $request){
+        $validator = Validator::make($request->all(), [
+            'user_id' => 'required',
+            'date' => 'required|array',
+            
+        ]);
+    
+        if ($validator->fails()) {
+            return response()->json(['error' => $validator->errors()], 200);
+        }
+        $requestData = json_decode($request->getContent(), true);
+        $datesToDelete = $requestData['date'];
 
+       
+        $today = Carbon::today();
+
+       
+        $bookingsToDelete = Booking::where('user_id', $request->user_id)
+            ->whereIn('date', $datesToDelete)
+            ->get();
+
+        
+        foreach ($bookingsToDelete as $booking) {
+            $booking->delete();
+        }
+
+        // Optionally, you can return a response indicating success or failure
+        return response()->json(['message' => 'Bookings deleted successfully.'], 200);
+    }
 }
