@@ -139,6 +139,34 @@ class MasterDataController extends Controller
         ]);
     }
 
+    public function unit_edit($id)
+    {
+        $itemUnit = ItemUnits::findOrFail($id);
+
+        return view('admin.item_units.edit', compact('itemUnit'));
+    }
+
+    public function unit_update(Request $request, $id)
+    {
+        $request->validate([
+            'unit_name' => 'required|max:255|unique:item_units,unit_name,' . $id,
+            'description' => 'nullable',
+        ]);
+
+        $itemUnit = ItemUnits::findOrFail($id);
+
+        $itemUnit->update([
+            'unit_name' => $request->input('unit_name'),
+            'description' => $request->input('description'),
+        ]);
+
+        $request->session()->flash('success', 'Item unit updated successfully');
+        return response()->json([
+            'status' => true,
+            'message' => 'Item unit updated successfully'
+        ]);
+    }
+
 
     // item Crud
     public function item_index(Request $request)
@@ -184,6 +212,44 @@ class MasterDataController extends Controller
             return response([
                 'status' => true,
                 'message' => 'New item created successfully',
+            ]);
+        } else {
+            return response([
+                'status' => false,
+                'errors' => $validator->errors()
+            ]);
+        }
+    }
+
+    public function item_edit($id)
+    {
+        $item = Item::findOrFail($id);
+        $itemUnits = ItemUnits::orderBy('unit_name', 'ASC')->get();
+
+        return view('admin.item.edit', compact('item', 'itemUnits'));
+    }
+
+    public function item_update(Request $request, $id)
+    {
+        $validator = Validator::make($request->all(), [
+            'item_units_id' => 'required',
+            'item_code' => 'nullable',
+            'item_name' => 'required',
+        ]);
+
+        if ($validator->passes()) {
+            $item = Item::findOrFail($id);
+            $item->item_units_id = $request->input('item_units_id');
+            $item->item_code = $request->input('item_code');
+            $item->item_name = $request->input('item_name');
+
+            $item->save();
+
+            $request->session()->flash('success', 'Item updated successfully');
+
+            return response([
+                'status' => true,
+                'message' => 'Item updated successfully',
             ]);
         } else {
             return response([

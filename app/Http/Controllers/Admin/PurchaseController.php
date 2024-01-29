@@ -11,6 +11,13 @@ use Illuminate\Http\Request;
 
 class PurchaseController extends Controller
 {
+    public function index()
+    {
+        $purchases = Purchase::orderBy('date', 'DESC')->paginate(10); 
+
+        return view('admin.purchase.index', compact('purchases'));
+    }
+
     public function create()
     {
         $itemUnits = ItemUnits::orderBy('unit_name', 'ASC')->get();
