@@ -35,4 +35,5 @@ Route::get('/today-booking-count', [BookingController::class, 'todayBookingCount
 Route::post('/today-booking-list', [BookingController::class, 'todayBookingList']);
 Route::post('/check-in', [BookingController::class, 'checkIn']);
 Route::get('/meal-dates/{id}', [BookingController::class, 'mealDates']);
+Route::post('/meal-dates-cancel', [BookingController::class, 'mealDatesCancel']);
 });
