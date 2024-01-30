@@ -34,6 +34,7 @@
                                 <th>Item</th>
                                 <th>Quantity</th>
                                 <th>Unit Price</th>
+                                <th>Total Price</th>
                                 <th>Funding Source</th>
                             </tr>
                         </thead>
@@ -47,6 +48,7 @@
                                         <td>{{ $purchase->item->item_name }}</td>
                                         <td>{{ $purchase->qty }}</td>
                                         <td>{{ $purchase->unit_price }}</td>
+                                        <td>{{ $purchase->grand_total }}</td>
                                         <td>{{ $purchase->foundingSource->source }}</td>
                                     </tr>
                                 @endforeach
