@@ -8,4 +8,14 @@ use Illuminate\Database\Eloquent\Model;
 class Purchase extends Model
 {
     use HasFactory;
+    public function item()
+{
+    return $this->belongsTo(Item::class);
+}
+
+public function foundingSource()
+{
+    return $this->belongsTo(FundingSource::class, 'founding_source_id');
+}
+
 }

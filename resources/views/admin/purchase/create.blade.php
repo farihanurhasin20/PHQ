@@ -25,17 +25,18 @@
                         <div class="col-md-6">
                             <div class="form-group">
                                 <label for="purchaseNumber">Purchase Number <span class="text-danger">*</span></label>
-                                <input type="text" name="purchaseNumber" id="purchaseNumber" class="form-control" placeholder="Enter Purchase Number">
+                                <input type="text" name="purchaseNumber" id="purchaseNumber" class="form-control" placeholder="Enter Purchase Number" required>
                                 <p class="error"></p>
                             </div>
                         </div>
                         <div class="col-md-6">
                             <div class="mb-3">
                                 <label for="date">Purchase Date <span class="text-danger">*</span></label>
-                                <input type="date" name="date" id="date" class="form-control" required>
+                                <input type="date" name="date" id="date" class="form-control" value="{{ now()->format('Y-m-d') }}" required>
                                 <p class="error"></p>
                             </div>
                         </div>
+
                     </div>
                 </form>
             </div>
@@ -165,151 +166,157 @@
 @endsection
 
 <script>
-    document.addEventListener('DOMContentLoaded', function () {
-    // Calculate total price dynamically based on qty and unit price
-    const qtyInput = document.getElementById('qty');
-    const unitPriceInput = document.getElementById('unit_price');
-    const totalPriceInput = document.getElementById('total_price');
-    const foundingSourceSelect = document.getElementById('founding_source_id');
+    document.addEventListener('DOMContentLoaded', function() {
+        // Calculate total price dynamically based on qty and unit price
+        const qtyInput = document.getElementById('qty');
+        const unitPriceInput = document.getElementById('unit_price');
+        const totalPriceInput = document.getElementById('total_price');
+        const foundingSourceSelect = document.getElementById('founding_source_id');
 
-    [qtyInput, unitPriceInput].forEach(input => {
-        input.addEventListener('input', function () {
-            calculateTotalPrice();
-        });
-    });
-
-    function calculateTotalPrice() {
-        const qty = parseFloat(qtyInput.value) || 0;
-        const unitPrice = parseFloat(unitPriceInput.value) || 0;
-        const totalPrice = qty * unitPrice;
-
-        totalPriceInput.value = totalPrice.toFixed(2);
-        validateAvailableFund(totalPrice);
-    }
-
-    // Initialize grand total
-    var grandTotal = 0;
-
-    $('#addToCartBtn').click(function () {
-    // Get values from form fields
-    var selectedItemId = $('#item_id').val();
-    var itemName = $('#item_id option:selected').text();
-    var unitName = $('#item_unit_id option:selected').text();
-    var itemUnitId = $('#item_unit_id').val();
-    var qty = $('#qty').val();
-    var unitPrice = $('#unit_price').val();
-    var totalPrice = parseFloat(qty) * parseFloat(unitPrice);
-
-    // Update grand total
-    grandTotal += totalPrice;
-
-    // Append new row to the table with added item details and remove button
-    var newRow = '<tr data-item_id="' + selectedItemId + '" data-item_unit_id="' + itemUnitId + '"><td>' + itemName + '</td><td>' + unitName + '</td><td>' + qty + '</td><td>' + unitPrice + '</td><td>' + totalPrice.toFixed(2) + '</td><td><i class="fas fa-times text-danger remove-item"></i></td></tr>';
-    $('#cartTable tbody').append(newRow);
-
-    // Clear form fields after adding to cart
-    $('#qty').val('');
-    $('#unit_price').val('');
-
-    // Update the grand total display
-    updateGrandTotal();
-
-    // Call the function to validate available funds
-    validateAvailableFund();
-});
-
-    // Event handler for removing an item
-    $('#cartTable').on('click', '.remove-item', function () {
-        var row = $(this).closest('tr');
-        var totalPrice = parseFloat(row.find('td:eq(4)').text());
-
-        // Update grand total by subtracting the removed item's total price
-        grandTotal -= totalPrice;
-
-        // Remove the row from the table
-        row.remove();
-
-        // Update the grand total display
-        updateGrandTotal();
-
-        // Call the function to validate available funds
-        validateAvailableFund();
-    });
-
-    function updateGrandTotal() {
-        $('#grandTotal').text(grandTotal.toFixed(2));
-    }
-
-    var fundingSourceSelect = $('#founding_source_id')[0];
-
-    function validateAvailableFund() {
-        const selectedOptions = Array.from(foundingSourceSelect.options).filter(option => {
-            const currentFund = parseFloat(option.dataset.currentFund) || 0;
-            return grandTotal <= currentFund;
-        });
-
-        // Show/hide options based on the total price
-        Array.from(foundingSourceSelect.options).forEach(option => {
-            option.style.display = 'none';
-        });
-
-        if (selectedOptions.length > 0) {
-            selectedOptions.forEach(option => {
-                option.style.display = '';
+        [qtyInput, unitPriceInput].forEach(input => {
+            input.addEventListener('input', function() {
+                calculateTotalPrice();
             });
-        } else {
-            alert("Sorry! No funds are available.");
+        });
+
+        function calculateTotalPrice() {
+            const qty = parseFloat(qtyInput.value) || 0;
+            const unitPrice = parseFloat(unitPriceInput.value) || 0;
+            const totalPrice = qty * unitPrice;
+
+            totalPriceInput.value = totalPrice.toFixed(2);
+            validateAvailableFund(totalPrice);
         }
-    }
 
-    $('#submitBtn').click(function () {
-    // Extract data from the form
-    var formData = $('#userForm').serializeArray();
+        // Initialize grand total
+        var grandTotal = 0;
 
-    // Extract data from the cart table
-    var cartItems = [];
-    var selectedFundingSource = $('#founding_source_id').val(); // Get the selected funding source
-    $('#cartTable tbody tr').each(function () {
-        var itemData = {
-            item_id: $(this).data('item_id'),
-            item_unit_id: $(this).data('item_unit_id'),
-            qty: $(this).find('td:eq(2)').text(),
-            unit_price: $(this).find('td:eq(3)').text(),
-            total_price: $(this).find('td:eq(4)').text(),
-            founding_source_id: selectedFundingSource, // Add the selected funding source to itemData
-        };
-        cartItems.push(itemData);
-    });
+        $('#addToCartBtn').click(function() {
+            // Get values from form fields
+            var selectedItemId = $('#item_id').val();
+            var itemName = $('#item_id option:selected').text();
+            var unitName = $('#item_unit_id option:selected').text();
+            var itemUnitId = $('#item_unit_id').val();
+            var qty = $('#qty').val();
+            var unitPrice = $('#unit_price').val();
+            var totalPrice = parseFloat(qty) * parseFloat(unitPrice);
 
-    // Add cart items data to the form data
-    formData.push({ name: 'cartItems', value: JSON.stringify(cartItems) });
+            // Update grand total
+            grandTotal += totalPrice;
 
-    // Make sure CSRF token is included
-    formData.push({ name: '_token', value: '{{ csrf_token() }}' });
+            // Append new row to the table with added item details and remove button
+            var newRow = '<tr data-item_id="' + selectedItemId + '" data-item_unit_id="' + itemUnitId + '"><td>' + itemName + '</td><td>' + unitName + '</td><td>' + qty + '</td><td>' + unitPrice + '</td><td>' + totalPrice.toFixed(2) + '</td><td><i class="fas fa-times text-danger remove-item"></i></td></tr>';
+            $('#cartTable tbody').append(newRow);
 
-    // Make an AJAX request to store the data
-    $.ajax({
-        url: '{{ route("purchases.store") }}',
-        method: 'POST',
-        data: formData,
-        success: function (response) {
-            // Handle success (if needed)
-            console.log(response.message);
-        },
-        error: function (error) {
-            // Handle error (if needed)
-            console.error('Error:', error.responseJSON);
+            // Clear form fields after adding to cart
+            $('#qty').val('');
+            $('#unit_price').val('');
 
-            // Display error messages
-            if (error.responseJSON && error.responseJSON.errors) {
-                var errorMessages = error.responseJSON.errors;
-                Object.keys(errorMessages).forEach(function (field) {
-                    var errorMessage = errorMessages[field][0];
-                    $('#' + field + '-error').text(errorMessage); // Assuming you have error placeholders with IDs like "item_id-error", "qty-error", etc.
+            // Update the grand total display
+            updateGrandTotal();
+
+            // Call the function to validate available funds
+            validateAvailableFund();
+        });
+
+        // Event handler for removing an item
+        $('#cartTable').on('click', '.remove-item', function() {
+            var row = $(this).closest('tr');
+            var totalPrice = parseFloat(row.find('td:eq(4)').text());
+
+            // Update grand total by subtracting the removed item's total price
+            grandTotal -= totalPrice;
+
+            // Remove the row from the table
+            row.remove();
+
+            // Update the grand total display
+            updateGrandTotal();
+
+            // Call the function to validate available funds
+            validateAvailableFund();
+        });
+
+        function updateGrandTotal() {
+            $('#grandTotal').text(grandTotal.toFixed(2));
+        }
+
+        var fundingSourceSelect = $('#founding_source_id')[0];
+
+        function validateAvailableFund() {
+            const selectedOptions = Array.from(foundingSourceSelect.options).filter(option => {
+                const currentFund = parseFloat(option.dataset.currentFund) || 0;
+                return grandTotal <= currentFund;
+            });
+
+            // Show/hide options based on the total price
+            Array.from(foundingSourceSelect.options).forEach(option => {
+                option.style.display = 'none';
+            });
+
+            if (selectedOptions.length > 0) {
+                selectedOptions.forEach(option => {
+                    option.style.display = '';
                 });
+            } else {
+                alert("Sorry! No funds are available.");
             }
         }
+
+        $('#submitBtn').click(function() {
+            // Extract data from the form
+            var formData = $('#userForm').serializeArray();
+
+            // Extract data from the cart table
+            var cartItems = [];
+            var selectedFundingSource = $('#founding_source_id').val(); // Get the selected funding source
+            $('#cartTable tbody tr').each(function() {
+                var itemData = {
+                    item_id: $(this).data('item_id'),
+                    item_unit_id: $(this).data('item_unit_id'),
+                    qty: $(this).find('td:eq(2)').text(),
+                    unit_price: $(this).find('td:eq(3)').text(),
+                    total_price: $(this).find('td:eq(4)').text(),
+                    founding_source_id: selectedFundingSource, // Add the selected funding source to itemData
+                };
+                cartItems.push(itemData);
+            });
+
+            // Add cart items data to the form data
+            formData.push({
+                name: 'cartItems',
+                value: JSON.stringify(cartItems)
+            });
+
+            // Make sure CSRF token is included
+            formData.push({
+                name: '_token',
+                value: '{{ csrf_token() }}'
+            });
+
+            // Make an AJAX request to store the data
+            $.ajax({
+                url: '{{ route("purchases.store") }}',
+                method: 'POST',
+                data: formData,
+                success: function(response) {
+                    console.log(response.message);
+
+                    if (response["status"] == true) {
+                        window.location.href = '{{ route("purchases.index") }}';
+                    } else {
+                        var errors = response['errors'];
+                        $(".error").removeClass('is-invalid').html('');
+                        $.each(errors, function(key, value) {
+                            $(`#${key}`).addClass('is-invalid');
+                            $(`#${key}`).next('p').addClass('invalid-feedback').html(value);
+                        });
+                    }
+                },
+                error: function(jqXHR, exception) {
+                    console.log("Something went wrong");
+                }
+            });
+        });
     });
-});
-});
 </script>

@@ -87,6 +87,7 @@ class AuthController extends Controller
                 return response()->json($userData, 200);
             } else {
                 $userData['id'] = $user->id;
+                $userData['mobile'] = $user->mobile;
                 $userData['bp_number'] = $user->bp_num;
                 $userData['image'] = $user->image;
                 $userData['rank'] = $user->rank;

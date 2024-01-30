@@ -19,6 +19,7 @@ return new class extends Migration
             $table->date('date');
             $table->decimal('unit_price', 10, 2);
             $table->unsignedInteger('qty'); 
+            $table->decimal('grand_total', 10, 2);
             $table->string('purchase_number')->nullable();
             $table->timestamps();
         });
