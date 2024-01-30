@@ -29,7 +29,7 @@ class PurchaseController extends Controller
 
     public function store(Request $request)
     {
-        // dd($request->all());
+        dd($request->all());
         $request->validate([
             'purchaseNumber' => 'required|string',
             'date' => 'required|date',
@@ -40,21 +40,28 @@ class PurchaseController extends Controller
             'cartItems.*.item_id' => 'required',
             'cartItems.*.item_unit_id' => 'required',
         ]);
-        
-        $cartItems = json_decode($request->input('cartItems'), true);
-        dd($cartItems);
+    
+        $cartItems = $request->get('cartItems');
+  
+    if (is_array($cartItems)) {
         foreach ($cartItems as $item) {
-            $purchase = new Purchase();
-            $purchase->purchase_number = $request->input('purchaseNumber');
-            $purchase->date = $request->input('date');
-            $purchase->qty = $item['qty'];
-            $purchase->unit_price = $item['unit_price'];
-            $purchase->founding_source_id = $item['founding_source_id'];
-            $purchase->item_id = $item['item_id'];
-            $purchase->item_unit_id = $item['item_unit_id'];
-            $purchase->save();
+            foreach ($cartItems as $item) {
+                $purchase = new Purchase();
+                $purchase->purchase_number = $request->input('purchaseNumber');
+                $purchase->date = $request->input('date');
+                $purchase->qty = $item['qty'] ?? null;
+                $purchase->unit_price = $item['unit_price'] ?? null;
+                $purchase->founding_source_id = $item['founding_source_id'] ?? null;
+                $purchase->item_id = $item['item_id'] ?? null;
+                $purchase->item_unit_id = $item['item_unit_id'] ?? null;
+                $purchase->save();
+            }
         }
-
-        return redirect()->route('purchases.index')->with('success', 'Purchase created successfully.');
+    } else {
+        return back()->withErrors(['cartItems' => 'Invalid cartItems format.']);
     }
+
+    return redirect()->route('purchases.index')->with('success', 'Purchase created successfully.');
+}
+
 }
