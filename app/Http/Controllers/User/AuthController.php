@@ -7,6 +7,7 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\Validator;
 
 class AuthController extends Controller
@@ -134,10 +135,13 @@ class AuthController extends Controller
 
     public function updateProfile(Request $request)
     {
+        $userId = $request->user_id;
         $validator = Validator::make($request->all(), [
             'name' => 'nullable',
-            'mobile' => 'required|unique:users,mobile',
-            // 'bp_num' => 'required|unique:users,bp_num|min:10',
+            'mobile' => [
+                'required',
+                Rule::unique('users', 'mobile')->ignore($userId),
+            ],
             'rank' => 'nullable',
             'image' => 'nullable',
         ]);
@@ -173,6 +177,32 @@ class AuthController extends Controller
         $user->save();
         return response()->json(['message' => 'Profile updated successfully'], 200);
     }
+
+    public function updateStatus(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'user_id' => 'required|exists:users,id',
+            'status' => 'required|in:0,1',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json(['message' => $validator->errors()->first()], 422);
+        }
+
+        $user = User::find($request->input('user_id'));
+
+        if ($user) {
+            // Update the status
+            $user->status = $request->input('status');
+            $user->save();
+
+            return response()->json(['message' => 'User status updated successfully'], 200);
+        } else {
+            return response()->json(['message' => 'User not found'], 404);
+        }
+    }
+
+ 
 
     public function logout(Request $request)
     {
