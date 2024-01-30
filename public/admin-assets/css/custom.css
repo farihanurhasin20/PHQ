@@ -67,6 +67,11 @@
 }
 
 /* purchase  */
+
+.content-headers {
+  padding: 8px 0.5rem;
+}
+
 .card-head {
   -ms-flex: 1 1 auto;
   flex: 1 1 auto;

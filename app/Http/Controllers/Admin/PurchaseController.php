@@ -29,28 +29,32 @@ class PurchaseController extends Controller
 
     public function store(Request $request)
     {
+        // dd($request->all());
         $request->validate([
             'purchaseNumber' => 'required|string',
             'date' => 'required|date',
-            'item_units_id' => 'required',
-            'qty' => 'required|integer',
-            'unit_price' => 'required|numeric',
-            'founding_source_id' => 'required',
-            'item_id' => 'required',
-            'item_unit_id' => 'required',
+            'cartItems' => 'required|array|min:1', 
+            'cartItems.*.qty' => 'required|integer',
+            'cartItems.*.unit_price' => 'required|numeric',
+            'cartItems.*.founding_source_id' => 'required',
+            'cartItems.*.item_id' => 'required',
+            'cartItems.*.item_unit_id' => 'required',
         ]);
+        
+        $cartItems = json_decode($request->input('cartItems'), true);
+        dd($cartItems);
+        foreach ($cartItems as $item) {
+            $purchase = new Purchase();
+            $purchase->purchase_number = $request->input('purchaseNumber');
+            $purchase->date = $request->input('date');
+            $purchase->qty = $item['qty'];
+            $purchase->unit_price = $item['unit_price'];
+            $purchase->founding_source_id = $item['founding_source_id'];
+            $purchase->item_id = $item['item_id'];
+            $purchase->item_unit_id = $item['item_unit_id'];
+            $purchase->save();
+        }
 
-        $purchase = new Purchase();
-        $purchase->purchase_number = $request->input('purchaseNumber');
-        $purchase->date = $request->input('date');
-        $purchase->item_units_id = $request->input('item_units_id');
-        $purchase->qty = $request->input('qty');
-        $purchase->unit_price = $request->input('unit_price');
-        $purchase->founding_source_id = $request->input('founding_source_id');
-        $purchase->item_id = $request->input('item_id');
-        $purchase->item_unit_id = $request->input('item_unit_id');
-        $purchase->save();
-
-        return redirect()->route('purchases.create')->with('success', 'Purchase created successfully.');
+        return redirect()->route('purchases.index')->with('success', 'Purchase created successfully.');
     }
 }
