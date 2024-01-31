@@ -35,6 +35,7 @@ Route::group(['prefix' => 'admin'], function () {
         Route::get('/dashboard', [HomeController::class, 'index'])->name('admin.dashboard');
         Route::get('/masterdata', [HomeController::class, 'masterdata_index'])->name('admin.masterdata');     
         Route::get('/list', [BookingListController::class, 'index'])->name('users.list');
+        Route::get('/meal-booking/{id}', [AdminBookingListController::class, 'create'])->name('booking.create');
         Route::get('/list/create', [BookingListController::class, 'create'])->name('users.create');
         Route::post('/list', [BookingListController::class, 'store'])->name('users.store');
         Route::get('/edit/{id}', [BookingListController::class, 'edit'])->name('users.edit');

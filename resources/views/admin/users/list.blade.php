@@ -46,7 +46,7 @@
                 <table class="table table-hover text-nowrap">
                     <thead>
                         <tr>
-                            <th width="60">ID</th>
+                            <th width="60">Roll</th>
                             <th>Image</th>
                             <th>Name</th>
                             <th>Rank</th>
@@ -100,7 +100,7 @@
                                         <path d="M13.586 3.586a2 2 0 112.828 2.828l-.793.793-2.828-2.828.793-.793zM11.379 5.793L3 14.172V17h2.828l8.38-8.379-2.83-2.828z"></path>
                                     </svg>
                                 </a>
-                                <a href="">
+                                <a href="{{route('booking.create',$user->id)}}">
                                 <svg class="meal-book-icon w-4 h-4 mr-1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
                                         <g fill="none" stroke="currentColor" stroke-width="2">
                                             <rect width="14" height="14" x="3" y="3" rx="2" ry="2"></rect>
