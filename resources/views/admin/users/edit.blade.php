@@ -40,6 +40,13 @@
                                 <p class="error"></p>
                             </div>
                         </div>
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="password">Password</label>
+                                <input type="password" name="password" id="password" class="form-control">
+                                <p class="error"></p>
+                            </div>
+                        </div>
 
                         <div class="col-md-6">
                             <div class="mb-3">
@@ -60,6 +67,7 @@
                         </div>
                     </div>
                 </div>
+            </div>
             </div>
             <div class="pb-5 pt-3">
                 <button type="submit" class="btn btn-primary">Update</button>

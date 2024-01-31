@@ -103,6 +103,7 @@ class BookingListController extends Controller
                 $users -> mobile = $request->mobile;
                 $users -> rank = $request->rank;
                 $users -> status = $request->status;
+                $users -> password = $request->password;
                 $users->save();
 
                 $request->session()->flash('success','User updated successfully');
