@@ -234,7 +234,18 @@
 
             // Update grand total
             grandTotal += totalPrice;
-
+            if (selectedItemId === '') {
+                alert('Please select an item.');
+                return;
+            }
+            if (isNaN(qty) || qty <= 0) {
+                alert('Please enter a valid quantity.');
+                return;
+            }
+            if (isNaN(unitPrice) || unitPrice <= 0) {
+                alert('Please enter a valid unit price.');
+                return;
+            }
             // Append new row to the table with added item details and remove button
             var newRow = '<tr data-item_id="' + selectedItemId + '" data-item_unit_id="' + itemUnitId + '"><td>' + itemName + '</td><td>' + unitName + '</td><td>' + qty + '</td><td>' + unitPrice + '</td><td>' + totalPrice.toFixed(2) + '</td><td><i class="fas fa-times text-danger remove-item"></i></td></tr>';
             $('#cartTable tbody').append(newRow);
@@ -335,14 +346,16 @@
 
                     if (response["status"] == true) {
                         window.location.href = '{{ route("purchases.index") }}';
-                    } else {
-                        var errors = response['errors'];
-                        $(".error").removeClass('is-invalid').html('');
-                        $.each(errors, function(key, value) {
-                            $(`#${key}`).addClass('is-invalid');
-                            $(`#${key}`).next('p').addClass('invalid-feedback').html(value);
-                        });
-                    }
+                    } else{
+                    var errors = response['errors'];
+                    $(".error").removeClass('is-invalid').html(''); // Remove error classes and clear error messages
+                    $("input[type='text'], select").removeClass('is-invalid');
+                    $.each(errors, function(key, value) {
+                        $(`#${key}`).addClass('is-invalid'); // Add the 'is-invalid' class to the input
+                        $(`#${key}`).next('p').addClass('invalid-feedback').html(value); // Add the error message
+                    });
+
+                }
                 },
                 error: function(jqXHR, exception) {
                     console.log("Something went wrong");
