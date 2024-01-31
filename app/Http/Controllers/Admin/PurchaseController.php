@@ -7,6 +7,7 @@ use App\Models\FundingSource;
 use App\Models\Item;
 use App\Models\ItemUnits;
 use App\Models\Purchase;
+use Illuminate\Support\Facades\Validator;
 use Illuminate\Http\Request;
 
 class PurchaseController extends Controller
@@ -42,11 +43,12 @@ class PurchaseController extends Controller
 
     public function store(Request $request)
     {
-        $request->validate([
+        $validator = Validator::make($request->all(),[
             'purchaseNumber' => 'required|string',
             'date' => 'required|date',
             'cartItems' => 'required|json',
         ]);
+        if($validator->passes()){
 
         $cartItemsJson = $request->input('cartItems');
 
@@ -90,6 +92,13 @@ class PurchaseController extends Controller
             'status' => true,
             'message' => 'Purchase created successfully.'
         ]);
+    }
+    else{
+        return response()->json([
+            'status'=>false,
+            'errors'=>$validator->errors()
+        ]);
+     }
     }
     public function getUnitId($item_id)
     {
