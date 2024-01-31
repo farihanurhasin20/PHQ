@@ -25,7 +25,7 @@
                         <div class="col-md-6">
                             <div class="form-group">
                                 <label for="purchaseNumber">Purchase Number <span class="text-danger">*</span></label>
-                                <input type="text" name="purchaseNumber" id="purchaseNumber" class="form-control" placeholder="Enter Purchase Number" required>
+                                <input type="text" name="purchaseNumber" id="purchaseNumber" class="form-control" value="{{$generatedCode}}" required>
                                 <p class="error"></p>
                             </div>
                         </div>
@@ -66,17 +66,12 @@
                             </div>
                         </div>
                         <div class="col-md-6">
-                            <div class="form-group">
-                                <label for="item_unit_id">Unit <span class="text-danger">*</span></label>
-                                <select name="item_unit_id" id="item_unit_id" class="form-control" required>
-                                    <option value="">Select a Unit </option>
-                                    @foreach ($itemUnits as $itemUnit)
-                                    <option value="{{ $itemUnit->id }}">{{ $itemUnit->unit_name }}</option>
-                                    @endforeach
-                                </select>
-                                <p class="error"></p>
+                                <div class="form-group">
+                                    <label for="item_unit_id">Unit <span class="text-danger">*</span></label>
+                                    <input type="text" name="item_unit" id="item_unit" value="" class="form-control" readonly required>
+                                    <p class="error"></p>
+                                </div>
                             </div>
-                        </div>
                         <div class="col-md-4">
                             <div class="form-group">
                                 <label for="qty">Req Qty <span class="text-danger">*</span></label>
@@ -108,7 +103,7 @@
         </div>
 
         <div class="card">
-            <div class="card-body" style="max-height: 130px; overflow-y: auto;">
+            <div class="card-body" style="max-height: 600px; overflow-y: auto;">
                 <div class="table-responsive">
                     <table class="table table-bordered" id="cartTable">
                         <thead>
@@ -159,12 +154,48 @@
                 <button type="button" id="submitBtn" class="btn btn-primary">Submit</button>
             </div>
         </div>
+        <div><br></div>
 
 
 </section>
 
 @endsection
+@section('customJs')
+<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+<script>
+    $(document).ready(function () {
+        $('#item_id').on('change', function () {
+            var item_id = $(this).val();
 
+            if (item_id) {
+                $.ajax({
+                    url: '{{ route("purchases.getUnitId", ":item_id") }}'.replace(':item_id', item_id),
+                    type: 'GET',
+                    dataType: 'json',
+                    success: function (data) {
+                        if (data) {
+                            // Assuming the response is a single item unit
+                            var itemUnit = data;
+
+                            // Update the value of the item_unit input field
+                            $('#item_unit').val(itemUnit.unit_name);
+                            
+                        } else {
+                            // Optionally handle the case when no data is returned
+                            $('#item_unit').val('');
+                        }
+                    },
+                    error: function (data) {
+                        console.log('Error:', data);
+                    }
+                });
+            } else {
+                $('#item_unit_id').empty();
+                // Optionally show a default option or handle the case when no item is selected
+            }
+        });
+    });
+</script>
 <script>
     document.addEventListener('DOMContentLoaded', function() {
         // Calculate total price dynamically based on qty and unit price
@@ -320,3 +351,4 @@
         });
     });
 </script>
+@endsection

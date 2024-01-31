@@ -13,4 +13,8 @@ class ItemUnits extends Model
         'description',
 
     ];
+    public function items()
+    {
+        return $this->hasMany(Item::class, 'item_units_id');
+    }
 }
