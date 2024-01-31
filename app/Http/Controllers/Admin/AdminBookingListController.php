@@ -69,5 +69,9 @@ class AdminBookingListController extends Controller
     
         return view('admin.booking.dinner-list', compact('bookings', 'users'));
     }
+
+    public function create(){
+        
+    }
     
 }
