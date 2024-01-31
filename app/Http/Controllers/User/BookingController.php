@@ -252,24 +252,29 @@ class BookingController extends Controller
         ->latest()->first();
 
          if($bookings == null){
-        return response()->json(['message' => 'No Meal booked Today'], 200);
+        return response()->json(['message' => 'No Meal booked Today','meal_name'=>null, 'meal_time'=> null,'qrcode' => null], 200);
 
          }
-        $mealInfo = MealTime::whereRaw('? BETWEEN start_time AND end_time', [$formattedTime])->first();
        
-        
+        $mealInfo = MealTime::whereRaw('? BETWEEN start_time AND end_time', [$formattedTime])->first();
+      
         if($mealInfo == null){
+            
             $mealInfoNext = MealTime::where('start_time', '>', $formattedTime)
             ->orderBy('start_time')
             ->first();
             if ($mealInfoNext) {
                 $nextMealTime = Carbon::createFromFormat('H:i:s', $mealInfoNext->start_time)->format('h:i A');
-                $message = 'No meal right now. Next meal: ' . $mealInfoNext->meal_type . '. It will start from ' . $nextMealTime;
+                $message = 'No meal right now.';
+                $qrCode=null;
             } else {
                 $message = 'No upcoming meals Today.';
+                $mealInfoNext=null;
+                $nextMealTime=null;
+                $qrCode=null;
             }
-
-                return response()->json(['message' => $message], 200);
+            
+                return response()->json(['message' => $message, 'meal_name'=>$mealInfoNext->meal_type, 'meal_time'=> $nextMealTime,'qrcode' => $qrCode], 200);
         }  
         $user = Auth::user();
         $lastPart=$mealInfo->meal_type;
@@ -283,7 +288,7 @@ class BookingController extends Controller
                 ->latest()->first();
 
             if($booking == null){
-                return response()->json(['message' => 'No Meal Today'], 200);
+                return response()->json(['message' => 'No Meal Today','meal_name'=>null, 'meal_time'=> null,'qrcode' => null], 200);
 
             }
             $mealtype=strtolower($lastPart);
@@ -295,7 +300,7 @@ class BookingController extends Controller
             
 
     
-                    return response()->json(['message' => $mealType , 'qrcode' => $booking->$scanField], 200);
+                    return response()->json(['message' => $mealType ,'meal_name'=>$mealType, 'meal_time'=> $mealInfo->start_time, 'qrcode' => $booking->$scanField], 200);
                 }
             }
         

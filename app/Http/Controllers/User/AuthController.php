@@ -79,8 +79,10 @@ class AuthController extends Controller
 
             $userData = [
                 'token' => $user->createToken('MyApp')->plainTextToken,
+                'id' => $user->id,
                 'name' => $user->name,
-                'role' => $user->role,
+                'role' => $user->role, 
+                'mobile' => $user->mobile,
                 'message' => 'Login successful',
             ];
 
