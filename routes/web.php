@@ -44,6 +44,7 @@ Route::group(['prefix' => 'admin'], function () {
 
         // booking-list
         Route::get('/breakfast-list', [AdminBookingListController::class, 'breakfast_index'])->name('bookings.breakfast-list');
+        Route::post('/check-in', [AdminBookingListController::class, 'checkIn'])->name('bookings.check-in');
         Route::get('/lunch-list', [AdminBookingListController::class, 'lunch_index'])->name('bookings.lunch-list');
         Route::get('/dinner-list', [AdminBookingListController::class, 'dinner_index'])->name('bookings.dinner-list');
         Route::get('/logout',[LoginController::class, 'logout'])->name('admin.logout');

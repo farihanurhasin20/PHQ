@@ -81,3 +81,26 @@
   padding-left: 1.3rem;
 
 }
+
+[class*="sidebar-dark-"] {
+  /* New background color for the sidebar */
+  background-color: #0B60B0; /* Replace with your desired color code */
+}
+[class*=sidebar-dark-] .sidebar a {
+  color: #f0f0f0;
+}
+.font-weight-light {
+  font-weight: 500!important;
+}
+.dropdown-menu li a:hover {
+  background-color: #0b60b0c1;
+}
+
+.dropdown-menu li a:hover i {
+  color: #FFFFFF !important;
+}
+
+.dropdown-menu li a:hover p {
+  color: #FFFFFF !important;
+}
+
