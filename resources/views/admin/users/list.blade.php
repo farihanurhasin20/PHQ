@@ -16,6 +16,10 @@
     <!-- /.container-fluid -->
 </section>
 <!-- Main content -->
+<section class="content-header">
+    <!-- ... Your existing content ... -->
+</section>
+
 <section class="content">
     <!-- Default box -->
     <div class="container-fluid">
@@ -125,9 +129,4 @@
     <!-- /.card -->
 </section>
 <!-- /.content -->
-@endsection
-@section('customJs')
-<script>
-
-</script>
 @endsection
