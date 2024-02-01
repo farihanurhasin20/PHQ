@@ -26,6 +26,7 @@ Route::post('/login', [AuthController::class, 'login']);
 Route::post('/update-profile', [AuthController::class, 'updateProfile']);
 Route::post('/update-status', [AuthController::class, 'updateStatus']);
 Route::post('/reset-password', [AuthController::class, 'resetPassword']);
+Route::post('/reset-password-admin', [AuthController::class, 'resetPasswordAdmin']);
 Route::post('/logout', [AuthController::class, 'logout'])->middleware('auth:sanctum');
 
 Route::group(['middleware' => 'auth:sanctum'], function () {
@@ -37,6 +38,9 @@ Route::post('/booking', [BookingController::class, 'store']);
 Route::get('/today-booking-count', [BookingController::class, 'todayBookingCount']);
 Route::post('/today-booking-list', [BookingController::class, 'todayBookingList']);
 Route::post('/check-in', [BookingController::class, 'checkIn']);
+Route::post('/check-in-by-user-id', [BookingController::class, 'checkINByAdmin']);
 Route::get('/meal-dates/{id}', [BookingController::class, 'mealDates']);
+Route::get('/get-meal-dates-all/{id}', [BookingController::class, 'getMealDatesAll']);
+Route::get('/get-meal-dates-all-count', [BookingController::class, 'getMealDatesAllWithCount']);
 Route::post('/meal-dates-cancel', [BookingController::class, 'mealDatesCancel']);
 });

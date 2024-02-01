@@ -18,19 +18,19 @@ class BookingController extends Controller
     {
 
         $user = Auth::user();
-        
+
         $today = Carbon::today();
-    
+
         $bookings = Booking::where('user_id', $user->id)
-        ->whereDate('date', $today)
-        ->latest()->first();
+            ->whereDate('date', $today)
+            ->latest()->first();
         // $yesterday = now()->subDay(); // Subtracts one day from the current date
 
         // $bookings = Booking::where('user_id', $user->id)
         //     ->whereDate('created_at', $yesterday)
         //     ->latest()
         //     ->first();
-        
+
         return response()->json(['data' => $bookings], 200);
     }
 
@@ -48,7 +48,7 @@ class BookingController extends Controller
     //         'd_scan' => 'nullable|string',
 
     //     ]);
-    
+
     //     if ($validator->fails()) {
     //         return response()->json(['error' => $validator->errors()], 200);
     //     }
@@ -59,84 +59,83 @@ class BookingController extends Controller
     //     ->get()->first();
 
 
-        
+
     //     if ($bookings != null) {
     //         return response()->json(['message' => 'Already Booked'], 200);
     //     }
-       
-    
+
+
     //     $bookingData = $request->all();
-    
+
     //     $userId = Auth::id();
-        
-    
+
+
     //     // if (!empty($bookingData['breakfast'])) {
     //     //     $bookingData['b_scan'] = $this->generateQRCode($bookingData['date'], $userId, 'b');
     //     // }
-    
+
     //     // if (!empty($bookingData['lunch'])) {
     //     //     $bookingData['l_scan'] = $this->generateQRCode($bookingData['date'], $userId, 'l');
     //     // }
-    
+
     //     // if (!empty($bookingData['dinner'])) {
     //     //     $bookingData['d_scan'] = $this->generateQRCode($bookingData['date'], $userId, 'd');
     //     // }
-    
+
     //     $booking = Booking::create($bookingData);
-    
+
     //     return response()->json(['message' => 'Your meal has been booked successfully.', 'booking' => $booking], 200);
     // }
-    
-        public function store(Request $request)
+
+    public function store(Request $request)
     {
-       
-            $validator = Validator::make($request->all(), [
-                'user_id' => 'required|string',
-                'dates' => 'required|array',
-                'booking_type' => 'nullable',
-                'dates.*' => 'date', // Validate each date in the array
-                'breakfast' => 'nullable|string',
-                'b_scan' => 'nullable|array',
-                'lunch' => 'nullable|string',
-                'l_scan' => 'nullable|array',
-                'dinner' => 'nullable|string',
-                'd_scan' => 'nullable|array',
-            ]);
-        
-            if ($validator->fails()) {
-                return response()->json(['error' => $validator->errors()], 200);
+
+        $validator = Validator::make($request->all(), [
+            'user_id' => 'required|string',
+            'dates' => 'required|array',
+            'booking_type' => 'nullable',
+            'dates.*' => 'date', // Validate each date in the array
+            'breakfast' => 'nullable|string',
+            'b_scan' => 'nullable|array',
+            'lunch' => 'nullable|string',
+            'l_scan' => 'nullable|array',
+            'dinner' => 'nullable|string',
+            'd_scan' => 'nullable|array',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json(['error' => $validator->errors()], 200);
+        }
+
+        $userId = Auth::id();
+
+        foreach ($request->get('dates') as $key => $date) {
+            $bookings = Booking::where('user_id', $request->user_id)
+                ->whereDate('date', $date)
+                ->get()->first();
+
+            if ($bookings != null) {
+                return response()->json(['message' => 'Booking already exists for date ' . $date], 200);
             }
-        
-            $userId = Auth::id();
-        
-            foreach ($request->get('dates') as $key => $date) {
-                $bookings = Booking::where('user_id', $request->user_id)
-                    ->whereDate('date', $date)
-                    ->get()->first();
-        
-                if ($bookings != null) {
-                    return response()->json(['message' => 'Booking already exists for date ' . $date], 200);
-                }
-        
-                $bookingData = [
-                    'user_id' => $request->user_id,
-                    'date' => $date,
-                    'breakfast' => $request->breakfast,
-                    'booking_type' => $request->booking_type,
-                    'b_scan' => $request->b_scan[$key] ?? null,
-                    'lunch' => $request->lunch,
-                    'l_scan' => $request->l_scan[$key] ?? null,
-                    'dinner' => $request->dinner,
-                    'd_scan' => $request->d_scan[$key] ?? null,
-                ];
-        
-                // Additional logic for generating QR codes can be added here if needed
-        
-                $booking = Booking::create($bookingData);
-            }
-        
-            return response()->json(['message' => 'Your meals have been booked successfully.'], 200);
-        
+
+            $bookingData = [
+                'user_id' => $request->user_id,
+                'date' => $date,
+                'breakfast' => $request->breakfast,
+                'booking_type' => $request->booking_type,
+                'b_scan' => $request->b_scan[$key] ?? null,
+                'lunch' => $request->lunch,
+                'l_scan' => $request->l_scan[$key] ?? null,
+                'dinner' => $request->dinner,
+                'd_scan' => $request->d_scan[$key] ?? null,
+            ];
+
+            // Additional logic for generating QR codes can be added here if needed
+
+            $booking = Booking::create($bookingData);
+        }
+
+        return response()->json(['message' => 'Your meals have been booked successfully.'], 200);
     }
 
     private function generateQRCode($date, $userId, $mealType)
@@ -147,10 +146,10 @@ class BookingController extends Controller
     }
     public function todayBookingCount()
     {
-        
+
         $today = Carbon::today();
         $tomorrow = Carbon::tomorrow();
-        
+
         // Counts for today
         $todayCounts = [
             'totalBreakfast' => Booking::whereNotNull('breakfast')->whereDate('date', $today)->count(),
@@ -160,7 +159,7 @@ class BookingController extends Controller
             'totalDinner' => Booking::whereNotNull('dinner')->whereDate('date', $today)->count(),
             'totalDinnerCheckedIn' => Booking::where('dinner', '=', '2')->whereDate('date', $today)->count(),
         ];
-        
+
         // Counts for tomorrow
         $tomorrowCounts = [
             'totalBreakfast' => Booking::whereNotNull('breakfast')->whereDate('date', $tomorrow)->count(),
@@ -170,12 +169,11 @@ class BookingController extends Controller
             'totalDinner' => Booking::whereNotNull('dinner')->whereDate('date', $tomorrow)->count(),
             'totalDinnerCheckedIn' => Booking::where('dinner', '=', '2')->whereDate('date', $tomorrow)->count(),
         ];
-        
+
         return response()->json([
             'today' => $todayCounts,
             'tomorrow' => $tomorrowCounts,
         ], 200);
-        
     }
 
     public function todayBookingList(Request $request)
@@ -185,7 +183,7 @@ class BookingController extends Controller
             $users = User::where('role', 1)->get();
             $meal = $request->meal;
             $date = $request->date;
-        
+
             $bookings = Booking::whereIn('user_id', $users->pluck('id'))
                 ->whereDate('date', $date)
                 ->where(function ($query) use ($meal) {
@@ -194,7 +192,7 @@ class BookingController extends Controller
                 ->latest()
                 ->with('user') // Load the related user information
                 ->get();
-        
+
             // Transform the result to include user names and images
             $bookings = $bookings->map(function ($booking) {
                 return [
@@ -202,143 +200,147 @@ class BookingController extends Controller
                     // Add other fields as needed
                 ];
             });
-        
+
             return response()->json(['message' => 'Meal details', 'bookings' => $bookings], 200);
         } else {
             return response()->json(['message' => 'Unauthorized'], 401);
         }
-        
-
     }
 
-    public function checkIN(Request $request){
+    public function checkIN(Request $request)
+    {
         $user = Auth::user();
         $parts = explode('-', $request->qrcode);
-      
+
         $lastPart = end($parts);
         //  dd($lastPart); // breakfast
         if ($user && $user->role == 2) {
             $mealTypes = ['b_scan' => 'breakfast', 'l_scan' => 'lunch', 'd_scan' => 'dinner'];
-    
+
             foreach ($mealTypes as $scanField => $mealType) {
-                if($mealType == $lastPart){
-                $booking = Booking::where($scanField, $request->qrcode)->first();
-               
-            if($booking->$mealType == 2){
-                
-                return response()->json(['message' => 'already exists'], 200);
-            }
-                if ($booking) {
-                    $booking->$mealType = 2;
-                    $booking->save();
-    
-                    return response()->json(['message' => $mealType . ' successfully checkedIn'], 200);
+                if ($mealType == $lastPart) {
+                    $booking = Booking::where($scanField, $request->qrcode)->first();
+
+                    if ($booking->$mealType == 2) {
+
+                        return response()->json(['message' => 'already exists'], 200);
+                    }
+                    if ($booking) {
+                        $booking->$mealType = 2;
+                        $booking->save();
+
+                        return response()->json(['message' => $mealType . ' successfully checkedIn'], 200);
+                    }
                 }
             }
-        }
             return response()->json(['message' => 'Failed CheckedIn'], 200);
         }
-    
+
         return response()->json(['message' => 'Unauthorized'], 401);
     }
 
-    public function meal_time($id){
+    public function meal_time($id)
+    {
 
         $time = Carbon::now('Asia/Dhaka');
         $formattedTime = $time->format('H:i:s');
         $today = Carbon::today();
         $bookings = Booking::where('user_id', $id)
-        ->whereDate('date', $today)
-        ->latest()->first();
+            ->whereDate('date', $today)
+            ->latest()->first();
 
-         if($bookings == null){
-        return response()->json(['message' => 'No Meal booked Today','meal_name'=>null, 'meal_time'=> null,'qrcode' => null], 200);
+        if ($bookings == null) {
+            return response()->json(['message' => 'No Meal booked Today', 'meal_name' => null, 'meal_time' => null, 'qrcode' => null], 200);
+        }
 
-         }
-       
         $mealInfo = MealTime::whereRaw('? BETWEEN start_time AND end_time', [$formattedTime])->first();
-      
-        if($mealInfo == null){
-            
+
+        if ($mealInfo == null) {
+
             $mealInfoNext = MealTime::where('start_time', '>', $formattedTime)
-            ->orderBy('start_time')
-            ->first();
+                ->orderBy('start_time')
+                ->first();
             if ($mealInfoNext) {
                 $nextMealTime = Carbon::createFromFormat('H:i:s', $mealInfoNext->start_time)->format('h:i A');
                 $message = 'No meal right now.';
-                $qrCode=null;
+                $qrCode = null;
             } else {
                 $message = 'No upcoming meals Today.';
-                $mealInfoNext=null;
-                $nextMealTime=null;
-                $qrCode=null;
+                $mealInfoNext = null;
+                $nextMealTime = null;
+                $qrCode = null;
             }
-            
-                return response()->json(['message' => $message, 'meal_name'=>$mealInfoNext->meal_type, 'meal_time'=> $nextMealTime,'qrcode' => $qrCode], 200);
-        }  
+
+            return response()->json(['message' => $message, 'meal_name' => $mealInfoNext->meal_type, 'meal_time' => $nextMealTime, 'qrcode' => $qrCode], 200);
+        }
         $user = Auth::user();
-        $lastPart=$mealInfo->meal_type;
-          
-            $mealTypes = ['b_scan' => 'Breakfast', 'l_scan' => 'Lunch', 'd_scan' => 'Dinner'];
-    
-            foreach ($mealTypes as $scanField => $mealType) {
-                if($mealType == $lastPart){
+        $lastPart = $mealInfo->meal_type;
+
+        $mealTypes = ['b_scan' => 'Breakfast', 'l_scan' => 'Lunch', 'd_scan' => 'Dinner'];
+
+        foreach ($mealTypes as $scanField => $mealType) {
+            if ($mealType == $lastPart) {
                 $booking = Booking::where('user_id', $id)
-                ->whereDate('date', $today)
-                ->latest()->first();
+                    ->whereDate('date', $today)
+                    ->latest()->first();
 
-            if($booking == null){
-                return response()->json(['message' => 'No Meal Today','meal_name'=>null, 'meal_time'=> null,'qrcode' => null], 200);
-
-            }
-            $mealtype=strtolower($lastPart);
-          
-            // if($booking->$mealtype == 2){
-                
-            //     return response()->json(['message' => 'Meal done'], 200);
-            // } 
-            
-
-    
-                    return response()->json(['message' => $mealType ,'meal_name'=>$mealType, 'meal_time'=> $mealInfo->start_time, 'qrcode' => $booking->$scanField], 200);
+                if ($booking == null) {
+                    return response()->json(['message' => 'No Meal Today', 'meal_name' => null, 'meal_time' => null, 'qrcode' => null], 200);
                 }
-            }
-        
-        
-    
+                $mealtype = strtolower($lastPart);
 
+                // if($booking->$mealtype == 2){
+
+                //     return response()->json(['message' => 'Meal done'], 200);
+                // } 
+
+
+
+                return response()->json(['message' => $mealType, 'meal_name' => $mealType, 'meal_time' => $mealInfo->start_time, 'qrcode' => $booking->$scanField], 200);
+            }
+        }
     }
-    public function mealDates($id){
+    public function mealDates($id)
+    {
         $today = Carbon::today();
         $booking = Booking::where('user_id', $id)
-        ->whereMonth('date', $today)
-        ->get();
+            ->whereMonth('date', $today)
+            ->get();
         $bookingDates = $booking->pluck('date')->toArray();
-        return response()->json([ 'date' => $bookingDates], 200);
+        return response()->json(['date' => $bookingDates], 200);
     }
-    
-    public function mealDatesCancel(Request $request){
+    public function getMealDatesAll($id)
+    {
+        $today = Carbon::today();
+        $booking = Booking::where('user_id', $id)
+            ->get();
+        $bookingDates = $booking->pluck('date')->toArray();
+        return response()->json(['date' => $bookingDates], 200);
+    }
+
+    public function mealDatesCancel(Request $request)
+    {
         $validator = Validator::make($request->all(), [
             'user_id' => 'required',
             'date' => 'required|array',
-            
+
         ]);
-    
+
         if ($validator->fails()) {
             return response()->json(['error' => $validator->errors()], 200);
         }
         $requestData = json_decode($request->getContent(), true);
         $datesToDelete = $requestData['date'];
 
-       
+
         $today = Carbon::today();
 
-       
+
         $bookingsToDelete = Booking::where('user_id', $request->user_id)
             ->whereIn('date', $datesToDelete)
             ->get();
 
-        
+
         foreach ($bookingsToDelete as $booking) {
             $booking->delete();
         }
@@ -346,4 +348,56 @@ class BookingController extends Controller
         // Optionally, you can return a response indicating success or failure
         return response()->json(['message' => 'Bookings deleted successfully.'], 200);
     }
+
+    public function checkINByAdmin(Request $request)
+    {
+        $user = Auth::user();
+        $today = Carbon::today();
+
+
+        $lastPart = $request->meal_type;
+        //  dd($lastPart); // breakfast
+        if ($user && $user->role == 2) {
+            $mealTypes = ['b_scan' => 'breakfast', 'l_scan' => 'lunch', 'd_scan' => 'dinner'];
+
+            foreach ($mealTypes as $scanField => $mealType) {
+                if ($mealType == $lastPart) {
+                    $booking = Booking::where('user_id', $request->user_id)->whereDate('date', $today)->first();
+                    //    dd($booking);
+                    if ($booking != null) {
+                        if ($booking->$mealType == 2) {
+
+                            return response()->json(['message' => 'already exists'], 200);
+                        }
+                        if ($booking) {
+                            $booking->$mealType = 2;
+                            $booking->save();
+
+                            return response()->json(['message' => $mealType . ' successfully checkedIn'], 200);
+                        }
+                    } else {
+                        return response()->json(['message' => 'No meal today'], 200);
+                    }
+                }
+            }
+
+            return response()->json(['message' => 'Failed CheckedIn'], 200);
+        }
+
+        return response()->json(['message' => 'Unauthorized'], 401);
+    }
+    public function getMealDatesAllWithCount(){
+    $today = Carbon::today();
+    // Get the current month
+    $booking = Booking::whereYear('date', $today)
+                     ->get()
+                     ->groupBy('date') // Group by date
+                     ->map(function ($dates) {
+                         return [
+                             "date" => $dates->first()->date, // Get the date
+                             "count" => $dates->count(), // Get count of each date
+                         ];
+                     });
+    return response()->json(['date_counts' => $booking->values()], 200);
+                    }
 }

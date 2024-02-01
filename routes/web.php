@@ -36,6 +36,7 @@ Route::group(['prefix' => 'admin'], function () {
         Route::get('/masterdata', [HomeController::class, 'masterdata_index'])->name('admin.masterdata');     
         Route::get('/list', [BookingListController::class, 'index'])->name('users.list');
         Route::get('/meal-booking/{id}', [AdminBookingListController::class, 'create'])->name('booking.create');
+        Route::post('/meal-booking-store', [AdminBookingListController::class, 'store'])->name('booking.store');
         Route::get('/list/create', [BookingListController::class, 'create'])->name('users.create');
         Route::post('/list', [BookingListController::class, 'store'])->name('users.store');
         Route::get('/edit/{id}', [BookingListController::class, 'edit'])->name('users.edit');
@@ -44,7 +45,6 @@ Route::group(['prefix' => 'admin'], function () {
 
         // booking-list
         Route::get('/breakfast-list', [AdminBookingListController::class, 'breakfast_index'])->name('bookings.breakfast-list');
-        Route::post('/check-in', [AdminBookingListController::class, 'checkIn'])->name('bookings.check-in');
         Route::get('/lunch-list', [AdminBookingListController::class, 'lunch_index'])->name('bookings.lunch-list');
         Route::get('/dinner-list', [AdminBookingListController::class, 'dinner_index'])->name('bookings.dinner-list');
         Route::get('/logout',[LoginController::class, 'logout'])->name('admin.logout');
