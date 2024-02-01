@@ -1,5 +1,3 @@
-
-
 <aside class="main-sidebar sidebar-dark-primary elevation-4">
     <!-- Brand Logo -->
     <a href="{{ route('admin.dashboard') }}" class="brand-link">
@@ -32,12 +30,25 @@
                         <p>Master Data</p>
                     </a>
                 </li>
-
-                <li class="nav-item">
-                    <a href="{{ route('purchases.create') }}" class="nav-link">
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" data-toggle="dropdown">
                         <i class="nav-icon fas fa-cart-plus"></i>
-                        <p>Local Purchase</p>
+                        <p>Local Purchase <span class="caret"></span></p>
                     </a>
+                    <ul class="dropdown-menu">
+                        <li>
+                            <a class="nav-link" href="{{ route('purchases.create') }}">
+                                <i class="nav-icon fas fa-plus" style="color: #0B60B0;"></i>
+                                <p style="color: #0B60B0; font-weight: 600;">Add Purchase</p>
+                            </a>
+                        </li>
+                        <li>
+                            <a class="nav-link" href="{{ route('purchases.index') }}">
+                                <i class="nav-icon fas fa-shopping-cart"  style="color: #0B60B0;"></i>
+                                <p style="color: #0B60B0; font-weight: 600;">Purchase List</p>
+                            </a>
+                        </li>
+                    </ul>
                 </li>
 
                 <li class="nav-item">

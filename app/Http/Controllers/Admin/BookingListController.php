@@ -15,7 +15,7 @@ class BookingListController extends Controller
         $users = User::where('role', 1)->latest();
         if (!empty($request->get('keyword'))) {
             $keyword = $request->get('keyword');
-            $users = $users->where('name', 'like', '%' . $keyword . '%');
+            $users = $users->where('id', 'like', '%' . $keyword . '%');
         }
         // dd($users);
         $users = $users->paginate(10);
