@@ -386,4 +386,18 @@ class BookingController extends Controller
 
         return response()->json(['message' => 'Unauthorized'], 401);
     }
+    public function getMealDatesAllWithCount(){
+    $today = Carbon::today();
+    // Get the current month
+    $booking = Booking::whereYear('date', $today)
+                     ->get()
+                     ->groupBy('date') // Group by date
+                     ->map(function ($dates) {
+                         return [
+                             "date" => $dates->first()->date, // Get the date
+                             "count" => $dates->count(), // Get count of each date
+                         ];
+                     });
+    return response()->json(['date_counts' => $booking->values()], 200);
+                    }
 }
