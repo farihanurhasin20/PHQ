@@ -37,6 +37,8 @@ Route::post('/booking', [BookingController::class, 'store']);
 Route::get('/today-booking-count', [BookingController::class, 'todayBookingCount']);
 Route::post('/today-booking-list', [BookingController::class, 'todayBookingList']);
 Route::post('/check-in', [BookingController::class, 'checkIn']);
+Route::post('/check-in-by-user-id', [BookingController::class, 'checkINByAdmin']);
 Route::get('/meal-dates/{id}', [BookingController::class, 'mealDates']);
+Route::get('/get-meal-dates-all/{id}', [BookingController::class, 'getMealDatesAll']);
 Route::post('/meal-dates-cancel', [BookingController::class, 'mealDatesCancel']);
 });
