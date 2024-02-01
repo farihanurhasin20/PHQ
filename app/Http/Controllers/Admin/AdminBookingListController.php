@@ -97,7 +97,11 @@ class AdminBookingListController extends Controller
             $user= User::find($request->id);
 
             foreach ($datesArray as $date) {
-
+                        
+                $booking = Booking::whereDate('date', $date)
+                ->where('user_id', $request->id)
+                ->get()->first();
+                if($booking == null){
                 $booking = new Booking;
                 $booking->user_id = $request->id;
                 $booking->date = $date;
@@ -115,7 +119,7 @@ class AdminBookingListController extends Controller
                 $booking->d_scan = $d_scan;
                 $booking->save();
                 // Store each date in your database
-                
+                }   
             }
 
             return response()->json([
@@ -138,7 +142,7 @@ class AdminBookingListController extends Controller
         return $qrCodeData;
     }
 
-    public function checkIn(Request $request)
+    public function breakfast_checkIn(Request $request)
     {
         $today = Carbon::today();
 
@@ -158,7 +162,56 @@ class AdminBookingListController extends Controller
             }
             return response()->json([
                 'status' => true,
-                'message' => 'User created successfully',
+                'message' => 'CheckedIn successfully',
+            ]);
+    }
+
+    public function lunch_checkIn(Request $request)
+    {
+        $today = Carbon::today();
+
+        $booking = Booking::whereDate('date', $today)
+        ->whereIn('user_id', $request->user_ids)
+        ->get();
+               
+        // if($booking->breakfast == 2){
+            
+        //     return response()->json(['message' => 'already exists'], 200);
+        // }
+        foreach($booking as $bookings)
+            if ($bookings) {
+                $bookings->lunch = 2;
+                $bookings->save();
+
+            }
+            return response()->json([
+                'status' => true,
+                'message' => 'CheckedIn successfully',
+            ]);
+    }
+
+    public function dinner_checkIn(Request $request)
+    {
+        $today = Carbon::today();
+
+        $booking = Booking::whereDate('date', $today)
+        ->whereIn('user_id', $request->user_ids)
+        ->get();
+        // dd($booking);
+               
+        // if($booking->breakfast == 2){
+            
+        //     return response()->json(['message' => 'already exists'], 200);
+        // }
+        foreach($booking as $bookings)
+            if ($bookings) {
+                $bookings->dinner = 2;
+                $bookings->save();
+
+            }
+            return response()->json([
+                'status' => true,
+                'message' => 'CheckedIn successfully',
             ]);
     }
     
