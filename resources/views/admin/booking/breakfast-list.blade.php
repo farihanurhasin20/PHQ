@@ -133,7 +133,7 @@
         // Perform AJAX request
         if (userIds.length > 0) {
             $.ajax({
-                url: '{{ route("bookings.check-in") }}',
+                url: '{{ route("bookings.breakfast") }}',
                 type: 'POST',
                 data: {
                     _token: '{{ csrf_token() }}',
