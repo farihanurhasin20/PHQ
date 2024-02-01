@@ -133,6 +133,34 @@ class AuthController extends Controller
         // You can return a response indicating success if needed
         return response()->json(['message' => 'Password reset successfully'], 200);
     }
+
+    public function resetPasswordAdmin(Request $request)
+    {
+        // Validate the incoming request data
+        $validator = Validator::make($request->all(), [
+            'user_id' => 'required',
+            'new_password' => 'required',
+        ]);
+    
+        if ($validator->fails()) {
+            return response()->json(['message' => $validator->errors()], 400);
+        }
+    
+        // Find the user by ID
+        $user = User::findOrFail($request->user_id);
+    
+        // Check if the old password matches the current password
+       
+        // Hash the new password
+        $hashedPassword = Hash::make($request->new_password);
+    
+        // Update the user's password
+        $user->password = $hashedPassword;
+        $user->save();
+    
+        // You can return a response indicating success if needed
+        return response()->json(['message' => 'Password reset successfully'], 200);
+    }
     
 
     public function updateProfile(Request $request)

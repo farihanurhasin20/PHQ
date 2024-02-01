@@ -7,6 +7,7 @@ use App\Models\Booking;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Validator;
 
 class AdminBookingListController extends Controller
 {
@@ -75,9 +76,68 @@ class AdminBookingListController extends Controller
         return view('admin.booking.dinner-list', compact('bookings', 'users'));
     }
 
-    public function create(){
-        return view('admin.booking.create');
+    public function create($id){
+        $user= User::find($id);
+        return view('admin.booking.create',compact('user'));
     }
+    public function store(Request $request)
+    {
+        // dd($request->all());
+        $validator = Validator::make($request->all(), [
+            'id' => 'nullable',
+            'date' => 'required',
+        ]);
+     
+        if ($validator->passes()) {
+
+            // Create a new user instance
+            $datesString = $request->input('date');
+            $datesArray = explode(',', $datesString);
+        // dd($datesArray);
+            $user= User::find($request->id);
+
+            foreach ($datesArray as $date) {
+
+                $booking = new Booking;
+                $booking->user_id = $request->id;
+                $booking->date = $date;
+                
+                $booking->breakfast = 1;
+                $booking->booking_type = "By Admin";
+                $b_scan=$this->generateQRCode($date,$user,"breakfast");
+                // dd($b_scan);
+                $booking->b_scan = $b_scan;
+                $booking->lunch = 1;
+                $l_scan=$this->generateQRCode($date,$user,"lunch");;
+                $booking->l_scan = $l_scan;
+                $booking->dinner = 1;
+                $d_scan=$this->generateQRCode($date,$user,"dinnar");;
+                $booking->d_scan = $d_scan;
+                $booking->save();
+                // Store each date in your database
+                
+            }
+
+            return response()->json([
+                'status' => true,
+                'message' => 'User created successfully',
+            ]);
+        } else {
+            return response()->json([
+                'status' => false,
+                'errors' => $validator->errors(),
+            ]);
+        }
+    }
+
+       private function generateQRCode($date, $user, $mealType)
+    { 
+        $formattedDate = date('YmdHis', strtotime($date));
+        $qrCodeData =$user->bp_num . "-" .$formattedDate."-".   $mealType;
+        // $qrCode = new QrCode($qrCodeData);
+        return $qrCodeData;
+    }
+
     public function checkIn(Request $request)
     {
         $today = Carbon::today();
