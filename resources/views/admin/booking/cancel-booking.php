@@ -44,7 +44,7 @@
                     </div>
                 </div>
                 <div class="pb-5 pt-3">
-                    <button type="submit" class="btn btn-primary">Create</button>
+                    <button type="submit" class="btn btn-primary">Cancel booking</button>
                 </div>
             </div>
         </form>
@@ -63,7 +63,7 @@
         config = {
             mode: "multiple",
             dateFormat: "Y-m-d",
-            conjunction: " , ",
+            conjunction: ",",
             defaultDate: datesFromController // Pre-select dates from the controller
         };
             flatpickr("input[type=datetime-local]", config);
@@ -73,7 +73,7 @@
                 $("button[type=submit]").prop('disabled', true);
 
                 $.ajax({
-                    url: '{{ route("booking.store")}}',
+                    url: '{{ route("booking.cancel")}}',
                     type: 'POST',
                     data: new FormData(element[0]),
                     contentType: false,
