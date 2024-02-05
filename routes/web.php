@@ -4,7 +4,7 @@ use App\Http\Controllers\Admin\AdminBookingListController;
 use App\Http\Controllers\Admin\HomeController;
 use App\Http\Controllers\Admin\LoginController;
 use App\Http\Controllers\Admin\BookingListController;
-use App\Http\Controllers\admin\MasterDataController;
+use App\Http\Controllers\Admin\MasterDataController;
 use App\Http\Controllers\Admin\MealTimeController;
 use App\Http\Controllers\Admin\PurchaseController;
 use Illuminate\Support\Facades\Route;
@@ -37,14 +37,22 @@ Route::group(['prefix' => 'admin'], function () {
         Route::get('/list', [BookingListController::class, 'index'])->name('users.list');
         Route::get('/meal-booking/{id}', [AdminBookingListController::class, 'create'])->name('booking.create');
         Route::post('/meal-booking-store', [AdminBookingListController::class, 'store'])->name('booking.store');
+        Route::get('/meal-booking-cancel-show/{id}', [AdminBookingListController::class, 'cancelShow'])->name('booking.cancel.show');
+        Route::post('/meal-booking-cancel', [AdminBookingListController::class, 'cancel'])->name('booking.cancel');
         Route::get('/list/create', [BookingListController::class, 'create'])->name('users.create');
         Route::post('/list', [BookingListController::class, 'store'])->name('users.store');
         Route::get('/edit/{id}', [BookingListController::class, 'edit'])->name('users.edit');
         Route::put('/update/{id}', [BookingListController::class, 'update'])->name('users.update');
 
+        Route::get('/PDF', [AdminBookingListController::class, 'downloadPdf'])->name('admin.pdf');
+
+
 
         // booking-list
         Route::get('/breakfast-list', [AdminBookingListController::class, 'breakfast_index'])->name('bookings.breakfast-list');
+        Route::post('/breakfast-checkin', [AdminBookingListController::class, 'breakfast_checkIn'])->name('bookings.breakfast');
+        Route::post('/lunch-checkin', [AdminBookingListController::class, 'lunch_checkIn'])->name('bookings.lunch');
+        Route::post('/dinner-checkin', [AdminBookingListController::class, 'dinner_checkIn'])->name('bookings.dinner');
         Route::get('/lunch-list', [AdminBookingListController::class, 'lunch_index'])->name('bookings.lunch-list');
         Route::get('/dinner-list', [AdminBookingListController::class, 'dinner_index'])->name('bookings.dinner-list');
         Route::get('/logout',[LoginController::class, 'logout'])->name('admin.logout');

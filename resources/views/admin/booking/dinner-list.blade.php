@@ -85,7 +85,7 @@
                             </td>
                             <td>
                                 <label class="toggle-container">
-                                    <input type="checkbox" class="toggle-input">
+                                    <input type="checkbox" class="toggle-input" data-user-id="{{ $user->id }}">
                                     <span class="toggle-slider"></span>
                                 </label>
                             </td>
@@ -102,6 +102,9 @@
                 {{$users->links()}}
             </div>
         </div>
+        <div class="col-sm-12 text-right">
+        <button type="button" class="btn btn-success" id="checkInBtn">Check In</button>
+        <div><br></div>
     </div>
 </section>
 @endsection
@@ -114,6 +117,40 @@
         checkboxes.forEach(checkbox => {
             checkbox.checked = this.checked;
         });
+    });
+
+     // Add event listener to the "Check In" button
+     document.getElementById('checkInBtn').addEventListener('click', function () {
+        // Get all checked checkboxes
+        let checkboxes = document.querySelectorAll('.toggle-input:checked');
+
+        // Extract user IDs from data attributes
+        let userIds = Array.from(checkboxes).map(checkbox => checkbox.getAttribute('data-user-id'));
+
+        // Perform AJAX request
+        if (userIds.length > 0) {
+            $.ajax({
+                url: '{{ route("bookings.dinner") }}',
+                type: 'POST',
+                data: {
+                    _token: '{{ csrf_token() }}',
+                    user_ids: userIds
+                },
+                success: function (response) {
+                    if (response.status == true) {
+                        window.location.href = '{{ route("bookings.dinner-list") }}';
+                    }
+                    // Handle the response as needed
+                    console.log(response);
+                },
+                error: function (error) {
+                    // Handle errors
+                    console.error(error);
+                }
+            });
+        } else {
+            alert('No users selected for Check In.');
+        }
     });
 </script>
 @endsection
