@@ -18,11 +18,6 @@
     <div class="container-fluid">
         @include('admin.message')
         <div class="text-right">
-        <div class="col-sm-12 text-right">
-        <button type="button" class="btn btn-success" id="checkInBtn">Check In</button>
-        <div><br></div>
-   
-    </div>
             <label class="toggle-container">
                 <input type="checkbox" id="selectAll" class="toggle-input">
                 <span class="toggle-slider"></span>
@@ -35,7 +30,7 @@
                 @csrf
                 <div class="card-header">
                     <div class="card-title">
-                        <button type="button" onclick="window.location.href='{{ route("bookings.breakfast-list") }}'" class="btn btn-default btn-sm">Reset</button>
+                        <button type="button" onclick="window.location.href='{{ route("bookings.breakfast-list") }}'" class="btn btn-default btn-sm">Reset</button> &nbsp;
                     </div>
                     <div class="card-tools">
                         <div class="input-group input-group" style="width: 250px;">
@@ -48,11 +43,14 @@
                             </div>
                         </div>
                     </div>
+                    <div class="card-title">
+                        <button type="button" class="btn btn-success btn-sm" id="checkInBtn">Check In</button>
+                    </div>
                 </div>
             </form>
 
-         
-                <div class="card-body table-responsive p-0">
+
+            <div class="card-body table-responsive p-0">
                 <table class="table table-hover text-nowrap">
                     <thead>
                         <tr>
@@ -106,7 +104,11 @@
                 {{$users->links()}}
             </div>
         </div>
-
+        <!-- <div class="col-sm-12 text-right">
+        <button type="button" class="btn btn-success" id="checkInBtn">Check In</button>
+        <div><br></div>
+   
+    </div> -->
 </section>
 @endsection
 @section('customJs')
@@ -120,8 +122,8 @@
         });
     });
 
-     // Add event listener to the "Check In" button
-     document.getElementById('checkInBtn').addEventListener('click', function () {
+    // Add event listener to the "Check In" button
+    document.getElementById('checkInBtn').addEventListener('click', function() {
         // Get all checked checkboxes
         let checkboxes = document.querySelectorAll('.toggle-input:checked');
 
@@ -137,14 +139,14 @@
                     _token: '{{ csrf_token() }}',
                     user_ids: userIds
                 },
-                success: function (response) {
+                success: function(response) {
                     if (response.status == true) {
                         window.location.href = '{{ route("bookings.breakfast-list") }}';
                     }
                     // Handle the response as needed
                     console.log(response);
                 },
-                error: function (error) {
+                error: function(error) {
                     // Handle errors
                     console.error(error);
                 }

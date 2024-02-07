@@ -13,11 +13,6 @@
     </div>
     <!-- /.container-fluid -->
 </section>
-
-
-<section class="content-header">
-    <!-- ... Your existing content ... -->
-</section>
 <section class="content">
     <div class="container-fluid">
         @include('admin.message')
@@ -33,7 +28,7 @@
                 @csrf
                 <div class="card-header">
                     <div class="card-title">
-                        <button type="button" onclick="window.location.href='{{ route("bookings.lunch-list") }}'" class="btn btn-default btn-sm">Reset</button>
+                        <button type="button" onclick="window.location.href='{{ route("bookings.lunch-list") }}'" class="btn btn-default btn-sm">Reset</button> &nbsp;
                     </div>
                     <div class="card-tools">
                         <div class="input-group input-group" style="width: 250px;">
@@ -45,6 +40,9 @@
                                 </button>
                             </div>
                         </div>
+                    </div>
+                    <div class="card-title">
+                        <button type="button" class="btn btn-success btn-sm" id="checkInBtn">Check In</button>
                     </div>
                 </div>
             </form>
@@ -102,11 +100,6 @@
                 {{$users->links()}}
             </div>
         </div>
-        <div class="col-sm-12 text-right">
-        <button type="button" class="btn btn-success" id="checkInBtn">Check In</button>
-        <div><br></div>
-        
-    </div>
 </section>
 @endsection
 @section('customJs')
