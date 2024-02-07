@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Booking;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Carbon\Carbon;
@@ -12,7 +13,36 @@ class HomeController extends Controller
     public function index(){
         $today = Carbon::today();
         $tomorrow = Carbon::tomorrow();
+        $events = array();
+        $bookings = Booking::whereYear('date', $today)
+                     ->get()
+                     ->groupBy('date') // Group by date
+                     ->map(function ($dates) {
+                         return [
+                             "date" => $dates->first()->date, // Get the date
+                             "count" => $dates->count(), // Get count of each date
+                         ];
+                     });
+                    //  dd($bookings);
+        foreach($bookings as $booking) {
+            $color = null;
+            // if($booking->title == 'Test') {
+            //     $color = '#924ACE';
+            // }
+            // if($booking->title == 'Test 1') {
+            //     $color = '#68B01A';
+            // }
 
+            $events[] = [
+                // 'id'   => $booking->id,
+                'title' => 'booked :' . $booking['count'],
+                'start' => $booking['date'],
+                'end' => $booking['date'],
+                'color' => $color
+            ];
+        }
+        // dd($events);
+        // return view('calendar.index', ['events' => $events]);
         $todayBreakfastBooking = Booking::whereNotNull('breakfast')
             ->whereDate('date', '=', $today)
             ->count();
@@ -70,15 +100,49 @@ class HomeController extends Controller
             'tomorrowBreakfastCheckin' => $tomorrowBreakfastCheckin,
             'tomorrowLunchCheckin' => $tomorrowLunchCheckin,
             'tomorrowDinnerCheckin' => $tomorrowDinnerCheckin,
+            'events'=> $events,
         ]);
     }
-
+    public function listByDate(Request $request){
+        // dd($request->all());
+                // dd($users);
+                session()->put('date', $request->date);
+                return response()->json([
+                    'status' => true,
+                    'message' => 'Purchase created successfully.'
+                ]);
+    }
+    public function userListByDate(){
+        $date = session('date');
+        // dd($users);
+      
+        $booking = Booking::where('date', $date)
+        ->latest();
+        $bookingids = $booking->pluck('user_id')->toArray();
+        $users = User::whereIn('id', $bookingids)
+        
+        ->latest()->paginate();
+        // session()->forget('users');
+        
+        return view ('admin.booking.user-date-list',compact('users'));
+    }
     public function masterdata_index(){
         return view ('admin.masterdata');
     }
 
     public function purchase_index(){
         return view ('admin.purchase.list');
+    }
+
+    public function reports_index(){
+        return view ('admin.reports');
+    }
+
+    public function purchase_page(){
+        return view ('admin.local-purchase');
+    }
+    public function calender(){
+        return view ('admin.calender');
     }
 
     public function logout(){

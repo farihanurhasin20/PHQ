@@ -400,4 +400,17 @@ class BookingController extends Controller
                      });
     return response()->json(['date_counts' => $booking->values()], 200);
                     }
+                    
+    public function getUsers(Request $request){
+        // $today = Carbon::today();
+        // Get the current month
+        $booking = Booking::where('date', $request->date)
+                ->get();
+            $bookingids = $booking->pluck('user_id')->toArray();
+            $users = user::whereIn('id', $bookingids)
+                // ->whereIn('date', $today)
+                ->get();
+            
+        return response()->json(['users' => $users], 200);
+                        }  
 }

@@ -81,7 +81,7 @@ class BookingListController extends Controller
         }
     }
 
-    public function update(Request $request, $id){
+public function update(Request $request, $id){
         $users= User::find($id);
 
         if (empty($users)){
@@ -95,15 +95,19 @@ class BookingListController extends Controller
         $validator = Validator::make($request->all(),[
             'name' => 'required|min:3',
             'mobile' => 'required',
+            'password'=>'nullable'
      
     
             ]);
+            // dd($request->password);
             if($validator->passes()){
                 $users -> name = $request->name;
                 $users -> mobile = $request->mobile;
                 $users -> rank = $request->rank;
                 $users -> status = $request->status;
+                if($request->password!=null){
                 $users -> password = $request->password;
+                }
                 $users->save();
 
                 $request->session()->flash('success','User updated successfully');
