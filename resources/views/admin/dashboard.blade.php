@@ -3,17 +3,29 @@
 @section('content')
 
 <div class="row">
-    <div class="col-md-7">
+
 
         <section class="content-header">
             <div class="container-fluid">
+            <div class="col-sm-12 text-right"> 
+                      
+                    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#calendarModal" id="openCalendarButton">
+                    Open Calendar
+                </button>
+                       
+                    </div>
+                    
                 <div class="row mb-2">
                     <div class="col-sm-6">
                         <h5>Today's meal information</h5>
                     </div>
 
-                    <div class="col-sm-6 text-right">
+                    <div class="col-sm-6 text-right"> 
                         <p>{{ \Carbon\Carbon::now()->format('l, F j, Y') }}</p>
+                    <!-- <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#calendarModal" id="openCalendarButton">
+                    Open Calendar
+                </button> -->
+                       
                     </div>
                 </div>
             </div>
@@ -206,10 +218,10 @@
                 </div>
             </div>
         </section>
-    </div>
 
 
-    <div class="col-md-5">
+
+    
         <section class="content-header">
             <div class="container-fluid">
                 <div class="row mb-2">
@@ -241,18 +253,43 @@
                         </div>
                     </div>
                 </div>
-
-                <div class="container">
+                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#calendarModal" id="openCalendarButton">
+                    Open Calendar
+                </button>
+                <div class="modal fade" id="calendarModal" tabindex="-1" role="dialog" aria-labelledby="calendarModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="calendarModalLabel">Calendar</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+            <div class="container">
+                    <div class="row">
+            <div class="col-12">
+                <div id="calendar">
+                    <!-- FullCalendar will be appended here -->
+                </div>
+            </div>
+            </div>
+                        </div>
+            </div>
+        </div>
+    </div>
+</div>
+                <!-- <div class="container">
                     <div class="row">
                         <div class="col-12">
                             <div id="calendar">
                             </div>
                         </div>
                     </div>
-                </div>
+                </div> -->
             </div>
         </section>
-    </div>
+   
 </div>
 @endsection
 
@@ -269,8 +306,10 @@
 
 <script>
     $(document).ready(function() {
+
+    
         var booking = @json($events);
-        $('#calendar').fullCalendar({
+        var calendar =$('#calendar').fullCalendar({
             events: booking,
             selectable: true,
             selectHelper: true,
@@ -355,6 +394,14 @@
                 });
             }
         });
+        $('#openCalendarButton').click(function() {
+        // Delay the click on the "today" button by 200 milliseconds
+        console.log('clicked modal');
+        setTimeout(function() {
+            calendar.fullCalendar('today');
+        }, 200);
     });
+    });
+
 </script>
 @endsection
