@@ -20,22 +20,17 @@
                 <li class="nav-item">
                     <a href="{{ route('users.list') }}" class="nav-link">
                         <i class="nav-icon fas fa-users"></i>
-                        <p>Users</p>
+                        <p>User Management</p>
                     </a>
                 </li>
 
+               
                 <li class="nav-item">
-                    <a href="{{ route('admin.masterdata') }}" class="nav-link">
-                        <i class="nav-icon fas fa-sitemap"></i>
-                        <p>Master Data</p>
-                    </a>
-                </li>
-                <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" href="#" data-toggle="dropdown">
+                    <a class="nav-link" href="{{ route('admin.purchase') }}" >
                         <i class="nav-icon fas fa-cart-plus"></i>
                         <p>Local Purchase <span class="caret"></span></p>
                     </a>
-                    <ul class="dropdown-menu">
+                    <!-- <ul class="dropdown-menu">
                         <li>
                             <a class="nav-link" href="{{ route('purchases.create') }}">
                                 <i class="nav-icon fas fa-plus" style="color: #0B60B0;"></i>
@@ -49,7 +44,7 @@
                             </a>
                         </li>
                     </ul>
-                </li>
+                </li> -->
 
                 <li class="nav-item">
                     <a href="{{ route('bookings.breakfast-list') }}" class="nav-link">
@@ -67,6 +62,18 @@
                     <a href="{{ route('bookings.dinner-list') }}" class="nav-link">
                         <i class="nav-icon fas fa-hamburger"></i>
                         <p>Dinner</p>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="{{ route('admin.masterdata') }}" class="nav-link">
+                        <i class="nav-icon fas fa-sitemap"></i>
+                        <p>Master Data</p>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="{{ route('admin.reports') }}" class="nav-link">
+                        <i class="nav-icon fas fa-coffee"></i>
+                        <p>Report</p>
                     </a>
                 </li>
             </ul>

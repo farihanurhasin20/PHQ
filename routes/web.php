@@ -34,6 +34,11 @@ Route::group(['prefix' => 'admin'], function () {
    Route::group(['middleware' => 'admin.auth'],function(){
         Route::get('/dashboard', [HomeController::class, 'index'])->name('admin.dashboard');
         Route::get('/masterdata', [HomeController::class, 'masterdata_index'])->name('admin.masterdata');     
+        Route::get('/reports', [HomeController::class, 'reports_index'])->name('admin.reports');     
+        Route::get('/local-purchase', [HomeController::class, 'purchase_page'])->name('admin.purchase');     
+        Route::get('/calender', [HomeController::class, 'calender'])->name('admin.calender');     
+        Route::get('/list-by-date', [HomeController::class, 'listByDate'])->name('admin.listByDate');     
+        Route::get('/user-list-by-date', [HomeController::class, 'userListByDate'])->name('admin.userListByDate');     
         Route::get('/list', [BookingListController::class, 'index'])->name('users.list');
         Route::get('/meal-booking/{id}', [AdminBookingListController::class, 'create'])->name('booking.create');
         Route::post('/meal-booking-store', [AdminBookingListController::class, 'store'])->name('booking.store');
@@ -88,6 +93,8 @@ Route::group(['prefix' => 'admin'], function () {
 
         //Purchase
         Route::get('/purchases', [PurchaseController::class, 'index'])->name('purchases.index');
+        Route::post('/purchases', [PurchaseController::class, 'index'])->name('purchases.index');
+       
         Route::get('/get-purchases-id/{unitId}', [PurchaseController::class, 'getUnitId'])->name('purchases.getUnitId');
         Route::get('/purchases/create', [PurchaseController::class, 'create'])->name('purchases.create');
         Route::post('/purchases/store', [PurchaseController::class, 'store'])->name('purchases.store');

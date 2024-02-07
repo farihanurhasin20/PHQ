@@ -23,13 +23,30 @@ class PurchaseController extends Controller
 
         return response()->json(['error' => 'Item not found.'], 404);
     }
-    public function index()
+    public function index(Request $request)
+
     {
+        $startDate='--/--/--';
+        $endDate='--/--/--';
+        
         $purchases = Purchase::orderBy('date', 'DESC')->paginate(10);
-
-        return view('admin.purchase.index', compact('purchases'));
+        $purchasesAll = Purchase::all();
+        $purchasesAmount=$purchasesAll->sum('grand_total');
+        if ($request->filled('fromDate') && $request->filled('toDate')) {
+            $start_date = $request->fromDate;
+            $end_date = $request->toDate;
+            $startDate = $start_date;
+            $endDate = $end_date;
+            $purchases = Purchase::whereBetween("date", [$start_date, $end_date])->get();
+            $purchasesAmount = $purchases->sum('grand_total');
+            $purchases=Purchase::whereBetween("date", [$start_date, $end_date])->paginate(20);
+        }
+        
+// dd($purchasesAmount,$purchases);
+        // $datesFromController = $start_date;
+        return view('admin.purchase.index', compact('purchases','startDate','endDate','purchasesAmount'));
     }
-
+    
     public function create()
     {
         $itemUnits = ItemUnits::orderBy('unit_name', 'ASC')->get();

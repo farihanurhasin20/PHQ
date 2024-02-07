@@ -18,21 +18,7 @@
         <div class="row">
 
             <!-- Dinner -->
-            <div class="col-lg-3 col-md-6 col-sm-12">
-            <a href="{{ route('users.create') }}" class="card-link">
-                <div class="small-box card" style="padding-top: 20px;">
-                    <div class="inner d-flex align-items-center justify-content-center">
-                        <div class="col-lg-6 col-6 text-center">
-                            <h3><i class="fas fa-plus" ></i></h3>
-                            <p>Add Users</p>
-                        </div>
-                    </div>
-                    <div class="icon">
-                        <i class="ion ion-stats-bars"></i>
-                    </div>
-                </div>
-                </a>
-            </div>
+          
 
          <!-- Dinner -->
          <div class="col-lg-3 col-md-6 col-sm-12">
@@ -85,6 +71,23 @@
                 </a>
             </div>
 
+            
+            <div class="col-lg-3 col-md-6 col-sm-12">
+            <a href="{{ route('fund_history.create') }}" class="card-link">
+                <div class="small-box card" style="padding-top: 20px;">
+                    <div class="inner d-flex align-items-center justify-content-center">
+                        <div class="col-lg-6 col-6 text-center">
+                            <h3><i class="fas fa-plus" ></i></h3>
+                            <p>New Funding</p>
+                        </div>
+                    </div>
+                    <div class="icon">
+                        <i class="ion ion-stats-bars"></i>
+                    </div>
+                </div>
+                </a>
+            </div>
+
             <!-- Lunch -->
             <div class="col-lg-3 col-md-6 col-sm-12">
             <a href="{{ route('funding_sources.index') }}" class="card-link">
@@ -102,7 +105,7 @@
                 </a>
             </div>
 
-            <div class="col-lg-3 col-md-6 col-sm-12">
+            <!-- <div class="col-lg-3 col-md-6 col-sm-12">
             <a href="{{ route('fund_history.index') }}" class="card-link">
                 <div class="small-box card" style="padding-top: 20px;">
                     <div class="inner d-flex align-items-center justify-content-center">
@@ -116,9 +119,9 @@
                     </div>
                 </div>
                 </a>
-            </div>
+            </div> -->
 
-            <div class="col-lg-3 col-md-6 col-sm-12">
+            <!-- <div class="col-lg-3 col-md-6 col-sm-12">
             <a href="{{ route('purchases.index') }}" class="card-link">
                 <div class="small-box card" style="padding-top: 20px;">
                     <div class="inner d-flex align-items-center justify-content-center">
@@ -132,9 +135,9 @@
                     </div>
                 </div>
                 </a>
-            </div>
+            </div> -->
 
-            <div class="col-lg-3 col-md-6 col-sm-12">
+            <!-- <div class="col-lg-3 col-md-6 col-sm-12">
             <a href="{{ route('admin.pdf') }}" class="card-link">
                 <div class="small-box card" style="padding-top: 20px;">
                     <div class="inner d-flex align-items-center justify-content-center">
@@ -148,7 +151,7 @@
                     </div>
                 </div>
                 </a>
-            </div>
+            </div> -->
 
         </div>
     </div>
