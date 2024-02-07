@@ -12,15 +12,32 @@ use Illuminate\Support\Facades\Validator;
 
 class AdminBookingListController extends Controller
 {
+
+public function reserved (Request $request)
+{
+    $users = User::where('role', 1)->latest();
+
+    if (!empty($request->get('keyword'))) {
+        $keyword = $request->get('keyword');
+        $users = $users->where('id', 'like', '%' . $keyword . '%');
+    } 
+
+    $users = $users->paginate(10);
+
+    $tomorrow = Carbon::tomorrow(); // Get tomorrow's date
+
+    $bookings = Booking::whereIn('user_id', $users->pluck('id'))
+        ->whereDate('date', $tomorrow) // Filter for tomorrow's date
+        ->latest()
+        ->get();
+    
+    return view('admin.booking.reserved', compact('bookings', 'users'));
+}  
+
+
     public function breakfast_index(Request $request)
     {
         $users = User::where('role', 1)->latest();
-       
-        // $today = Carbon::today();
-
-        // $bookings = Booking::whereIn('user_id', $users->pluck('id'))
-        // ->whereDate('created_at', $today)
-        // ->latest()->get();
         if (!empty($request->get('keyword'))) {
             $keyword = $request->get('keyword');
             $users = $users->where('id', 'like', '%' . $keyword . '%');

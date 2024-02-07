@@ -43,4 +43,6 @@ Route::get('/meal-dates/{id}', [BookingController::class, 'mealDates']);
 Route::get('/get-meal-dates-all/{id}', [BookingController::class, 'getMealDatesAll']);
 Route::get('/get-meal-dates-all-count', [BookingController::class, 'getMealDatesAllWithCount']);
 Route::post('/meal-dates-cancel', [BookingController::class, 'mealDatesCancel']);
+Route::post('/get-user-by-date', [BookingController::class, 'getUsers']);
+
 });
