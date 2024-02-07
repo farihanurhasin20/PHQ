@@ -104,3 +104,7 @@
   color: #FFFFFF !important;
 }
 
+#calendar .fc-toolbar h2 {
+  font-size: 17px; /* Adjust the font size as needed */
+}
+

@@ -60,6 +60,7 @@ Route::group(['prefix' => 'admin'], function () {
         Route::post('/dinner-checkin', [AdminBookingListController::class, 'dinner_checkIn'])->name('bookings.dinner');
         Route::get('/lunch-list', [AdminBookingListController::class, 'lunch_index'])->name('bookings.lunch-list');
         Route::get('/dinner-list', [AdminBookingListController::class, 'dinner_index'])->name('bookings.dinner-list');
+        Route::get('/reserved-list', [AdminBookingListController::class, 'reserved'])->name('bookings.reserved');
         Route::get('/logout',[LoginController::class, 'logout'])->name('admin.logout');
 
         //Meal time 
