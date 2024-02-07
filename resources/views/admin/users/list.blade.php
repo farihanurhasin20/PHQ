@@ -106,7 +106,7 @@
                                 </a>
                                 <a href="{{route('booking.create',$user->id)}}">
                                 <svg class="meal-book-icon w-4 h-4 mr-1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
-                                        <g fill="none" stroke="currentColor" stroke-width="2">
+                                        <g fill="none" stroke="green" stroke-width="2">
                                             <rect width="14" height="14" x="3" y="3" rx="2" ry="2"></rect>
                                             <path d="M6 3V1h8v2M6 18v-2h8v2M10 1v6M6 6h8"></path>
                                         </g>
@@ -114,7 +114,7 @@
                                 </a>
                                 <a href="{{route('booking.cancel.show',$user->id)}}">
                                 <svg class="meal-book-icon w-4 h-4 mr-1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
-                                        <g fill="none" stroke="currentColor" stroke-width="2">
+                                        <g fill="none" stroke="red" stroke-width="2">
                                             <rect width="14" height="14" x="3" y="3" rx="2" ry="2"></rect>
                                             <path d="M6 3V1h8v2M6 18v-2h8v2M10 1v6M6 6h8"></path>
                                         </g>
