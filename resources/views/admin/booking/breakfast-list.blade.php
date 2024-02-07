@@ -13,14 +13,16 @@
     </div>
     <!-- /.container-fluid -->
 </section>
-<section class="content-header">
-    <!-- ... Your existing content ... -->
-</section>
 
 <section class="content">
     <div class="container-fluid">
         @include('admin.message')
         <div class="text-right">
+        <div class="col-sm-12 text-right">
+        <button type="button" class="btn btn-success" id="checkInBtn">Check In</button>
+        <div><br></div>
+   
+    </div>
             <label class="toggle-container">
                 <input type="checkbox" id="selectAll" class="toggle-input">
                 <span class="toggle-slider"></span>
@@ -104,11 +106,7 @@
                 {{$users->links()}}
             </div>
         </div>
-        <div class="col-sm-12 text-right">
-        <button type="button" class="btn btn-success" id="checkInBtn">Check In</button>
-        <div><br></div>
-   
-    </div>
+
 </section>
 @endsection
 @section('customJs')

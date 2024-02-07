@@ -6,8 +6,8 @@
     <section class="content-header">
         <div class="container-fluid">
             <div class="col-sm-12 text-right">
-                <button type="button" class="btn btn-outline-primary" data-toggle="modal" data-target="#calendarModal" id="openCalendarButton">
-                    <i class="fas fa-calendar-alt"></i>  &nbsp; Calendar
+                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#calendarModal" id="openCalendarButton">
+                    <i class="fas fa-calendar-alt"></i> &nbsp; Calendar
                 </button>
             </div>
             <div><br></div>
@@ -104,7 +104,7 @@
     </section>
 
     <div>
-        <br> <br>
+        <br> <br> <br>
     </div>
 
     <section class="content-header">
@@ -112,7 +112,7 @@
             <div class="card">
                 <div class="card-head d-flex justify-content-between align-items-center">
                     <h5>Reservation Details for Tomorrow</h5>
-                    <p>{{ \Carbon\Carbon::now()->addDay()->format('l, F j, Y') }} &nbsp; &nbsp; </p>
+                    <p>{{ \Carbon\Carbon::now()->format('l, F j, Y') }} &nbsp; &nbsp; </p>
                 </div>
             </div>
         </div>
