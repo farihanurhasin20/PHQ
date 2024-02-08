@@ -5,7 +5,7 @@
     <div class="container-fluid my-2">
         <div class="row mb-2">
             <div class="col-sm-6">
-                <h1>Edit</h1>
+                <h1>Profile</h1>
             </div>
             <div class="col-sm-6 text-right">
                 <a href="{{ route('users.list') }}" class="btn btn-primary">Back</a>
@@ -17,7 +17,7 @@
 <!-- Main content -->
 <section class="content">
     <!-- Default box -->
-    <form action="{{ route('users.update', $users->id) }}" method="POST" id="userForm" name="userForm">
+    <form action="" method="POST" id="userForm" name="userForm">
         @csrf
         @method('PUT')
 
@@ -48,27 +48,11 @@
                             </div>
                         </div>
 
-                        <div class="col-md-6">
-                            <div class="mb-3">
-                                <label for="rank">Rank</label>
-                                <input type="text" name="rank" id="rank" class="form-control" placeholder="Rank"
-                                    value="{{ $users->rank }}">
-                            </div>
-                        </div>
-
-                        <div class="col-md-6">
-                            <div class="mb-3">
-                                <label for="status">Status</label>
-                                <select name="status" id="status" class="form-control">
-                                    <option {{ ($users->status == 1) ? 'selected' : '' }} value="1">Active</option>
-                                    <option {{ ($users->status == 0) ? 'selected' : '' }} value="0">Deactive</option>
-                                </select>
-                            </div>
-                        </div>
+                 
                     </div>
                 </div>
             </div>
-           
+            
             <div class="pb-5 pt-3">
                 <button type="submit" class="btn btn-primary">Update</button>
             </div>
@@ -87,7 +71,7 @@
         var element = $(this);
         $("button[type=submit]").prop('disabled', true);
         $.ajax({
-            url: '{{ route("users.update", $users->id) }}',
+            url: '{{ route("admin.profile.update", $users->id) }}',
             type: 'PUT',
             data: element.serialize(),  // Use serialize() instead of serializeArray()
             dataType: 'json',
@@ -97,7 +81,7 @@
             success: function (response) {
                 $("button[type=submit]").prop('disabled', false);
                 if (response.status == true) {
-                    window.location.href = "{{ route('users.list') }}";
+                    window.location.href = "{{ route('admin.dashboard') }}";
                 } else {
                     var errors = response.errors;
                     $(".error").removeClass('is-invalid').html('');

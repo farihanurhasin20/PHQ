@@ -51,6 +51,11 @@ Route::group(['prefix' => 'admin'], function () {
 
         Route::get('/PDF', [AdminBookingListController::class, 'downloadPdf'])->name('admin.pdf');
 
+        //admin
+        Route::get('/profile-edit', [LoginController::class, 'edit'])->name('admin.profile.edit');   
+        Route::put('/update/{id}', [LoginController::class, 'update'])->name('admin.profile.update');
+
+            
 
 
         // booking-list
