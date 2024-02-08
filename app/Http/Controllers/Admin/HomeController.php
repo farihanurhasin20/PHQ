@@ -14,33 +14,37 @@ class HomeController extends Controller
         $today = Carbon::today();
         $tomorrow = Carbon::tomorrow();
         $events = array();
-        $bookings = Booking::whereYear('date', $today)
-                     ->get()
-                     ->groupBy('date') // Group by date
-                     ->map(function ($dates) {
-                         return [
-                             "date" => $dates->first()->date, // Get the date
-                             "count" => $dates->count(), // Get count of each date
-                         ];
-                     });
-                    //  dd($bookings);
-        foreach($bookings as $booking) {
-            $color = null;
-            // if($booking->title == 'Test') {
-            //     $color = '#924ACE';
-            // }
-            // if($booking->title == 'Test 1') {
-            //     $color = '#68B01A';
-            // }
-
-            $events[] = [
-                // 'id'   => $booking->id,
-                'title' => 'booked :' . $booking['count'],
-                'start' => $booking['date'],
-                'end' => $booking['date'],
-                'color' => $color
-            ];
+        
+        $bookings = Booking::whereYear('date', $today->year) // Filter by year of today
+                         ->get()
+                         ->groupBy('date') // Group by date
+                         ->map(function ($dates) {
+                             return [
+                                 "date" => $dates->first()->date, // Get the date
+                                 "count" => $dates->count(), // Get count of each date
+                             ];
+                         });
+        
+        foreach ($bookings as $booking) {
+            $color = '#007DFF59';
+            // Check if the booking date is before or equal to today
+            if (Carbon::parse($booking['date'])->lt($today)) {
+                $events[] = [
+                    'title' => 'Checked: ' . $booking['count'],
+                    'start' => $booking['date'],
+                    'end' => $booking['date'],
+                    'color' => $color
+                ];
+            } else {
+                $events[] = [
+                    'title' => 'Booked: ' . $booking['count'],
+                    'start' => $booking['date'],
+                    'end' => $booking['date'],
+                    'color' => $color
+                ];
+            }
         }
+        
         // dd($events);
         // return view('calendar.index', ['events' => $events]);
         $todayBreakfastBooking = Booking::whereNotNull('breakfast')
