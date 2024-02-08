@@ -61,6 +61,7 @@
             var datesFromController = @json($datesFromController); // Example dates from the controller
         
         config = {
+            minDate: "today",
             mode: "multiple",
             dateFormat: "Y-m-d",
             conjunction: ",",
