@@ -53,7 +53,7 @@ Route::group(['prefix' => 'admin'], function () {
 
         //admin
         Route::get('/profile-edit', [LoginController::class, 'edit'])->name('admin.profile.edit');   
-        Route::put('/update/{id}', [LoginController::class, 'update'])->name('admin.profile.update');
+        Route::put('/profie-update/{id}', [LoginController::class, 'update'])->name('admin.profile.update');
 
             
 
