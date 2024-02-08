@@ -286,7 +286,45 @@
             selectHelper: true,
             eventRender: function(event, element) {
                 element.attr('title', event.title);
+                // if (event.title.startsWith('Checked:')) {
+                //             element.css('height', '70px'); // Set height for non-Booked: 0 events 
+                //             $('.fc-highlight').css('background-color', 'green');
+                //         }
+                // element.find('.fc-title').css({
+                //         // 'font-weight': '600',
+                //         // 'font-size': '14px', // Adjust font size as needed
+                //         // 'text-align': 'center' 
+                //     });
+    //             var parts = event.title.split(': ');
+    //          if (parts[0] === 'Checked') {
+    //     // Apply different styles to the number part (after 'Checked:')
+    //     var numberPart = parts[1];
+    //     element.find('.fc-title').html('Checked: ' +'<span style="color: #C70039;">'+ numberPart+'</span>');
+    // }
+               
             },
+            dayRender: function(date, cell) {
+    var eventsOnDate = $('#calendar').fullCalendar('clientEvents', function(event) {
+        return moment(event.start).isSame(date, 'day');
+    });
+    // Check if there are events on the specified date
+    if (eventsOnDate.length > 0) {
+        // Loop through each event on the date
+        for (var i = 0; i < eventsOnDate.length; i++) {
+            // Check if the event title starts with 'Checked:'
+            if (eventsOnDate[i].title.startsWith('Checked:')) {
+                // Change the background color of the cell for events with titles starting with 'Checked:'
+                cell.css('background-color', 'rgba(255, 192, 203, 0.5)'); // Set background color as needed
+                 // Break the loop after changing the color for the first matching event
+            }
+            else{
+                cell.css('background-color', 'rgba(135, 206, 250, 0.5)');
+            }
+        }
+    }
+},
+
+
             select: function(start, end, allDays) {
                 console.log('selecting.', start);
                 console.log('Start time:', start.format());
