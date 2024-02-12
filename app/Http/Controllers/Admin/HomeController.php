@@ -26,13 +26,13 @@ class HomeController extends Controller
                          });
         
         foreach ($bookings as $booking) {
-            $color = '#007DFF59';
-            $color1 = 'rgba(255, 134, 155 , 1)';
+            $color = '#005BBA';
+            $color1 = '#FF3054';
             $textcolor='black';
             // Check if the booking date is before or equal to today
             if (Carbon::parse($booking['date'])->lt($today)) {
                 $events[] = [
-                    'title' => 'Checked: ' . $booking['count'],
+                    'title' => 'Checked: '. $booking['count'],
                     'start' => $booking['date'],
                     'end' => $booking['date'],
                     // 'rendering' => 'background', // Set rendering to background
@@ -41,7 +41,7 @@ class HomeController extends Controller
                 ];
             } else {
                 $events[] = [
-                    'title' => 'Booked: ' . $booking['count'],
+                    'title' => 'Booked: '. $booking['count'],
                     'start' => $booking['date'],
                     'end' => $booking['date'],
                     'color' => $color,

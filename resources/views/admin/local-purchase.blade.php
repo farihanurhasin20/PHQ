@@ -43,7 +43,7 @@
                 <div class="small-box card" style="padding-top: 20px;">
                     <div class="inner d-flex align-items-center justify-content-center">
                         <div class="col-lg-6 col-6 text-center">
-                            <h3><i class="far fa-calendar-check"></i></h3>
+                            <h3><i class="fas fa-plus"></i></h3>
                             <p>Add Purchase</p>
                         </div>
                     </div>
@@ -60,7 +60,7 @@
                 <div class="small-box card" style="padding-top: 20px;">
                     <div class="inner d-flex align-items-center justify-content-center">
                         <div class="col-lg-6 col-6 text-center">
-                            <h3><i class="fas fa-download"></i></h3>
+                            <h3><i class="nav-icon fas fa-list-ul"></i></h3>
                             <p>Purchase List</p>
                         </div>
                     </div>

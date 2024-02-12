@@ -13,8 +13,8 @@
             <div><br></div>
             <div class="card">
                 <div class="card-head d-flex justify-content-between align-items-center">
-                    <h5>Today's meal information</h5>
-                    <p>{{ \Carbon\Carbon::now()->format('l, F j, Y') }} &nbsp; &nbsp; </p>
+                    <h5 style="color: #4F709C;">Today's meal information</h5>
+                    <h6>{{ \Carbon\Carbon::now()->format('l, F j, Y') }} &nbsp; &nbsp; </h6>
                 </div>
             </div>
         </div>
@@ -111,8 +111,8 @@
         <div class="container-fluid">
             <div class="card">
                 <div class="card-head d-flex justify-content-between align-items-center">
-                    <h5>Reservation Details for Tomorrow</h5>
-                    <p>{{ \Carbon\Carbon::now()->format('l, F j, Y') }} &nbsp; &nbsp; </p>
+                    <h5 style="color: #4F709C;">Reservation Details for Tomorrow</h5>
+                    <h6>{{ \Carbon\Carbon::now()->addDay()->format('l, F j, Y') }} &nbsp; &nbsp; </h6>
                 </div>
             </div>
         </div>
@@ -295,12 +295,17 @@
                 //         // 'font-size': '14px', // Adjust font size as needed
                 //         // 'text-align': 'center' 
                 //     });
-    //             var parts = event.title.split(': ');
-    //          if (parts[0] === 'Checked') {
-    //     // Apply different styles to the number part (after 'Checked:')
-    //     var numberPart = parts[1];
-    //     element.find('.fc-title').html('Checked: ' +'<span style="color: #C70039;">'+ numberPart+'</span>');
-    // }
+                var parts = event.title.split(': ');
+             if (parts[0] === 'Checked') {
+        // Apply different styles to the number part (after 'Checked:')
+        var numberPart = parts[1];
+        element.find('.fc-title').html('Checked: ' +'<span style="font-weight: bold;">'+ numberPart+'</span>');
+    } else {
+        // Apply different styles to the number part (after 'Checked:')
+        var numberPart = parts[1];
+        element.find('.fc-title').html('Booked: ' +'<span style="font-weight: bold;">'+ numberPart+'</span>');
+    }
+      
                
             },
             dayRender: function(date, cell) {
