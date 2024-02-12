@@ -21,8 +21,9 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', function () {
-    return view('welcome');
+    return redirect()->route('admin.login'); 
 });
+
 Route::group(['prefix' => 'admin'], function () {
   
 
@@ -48,6 +49,7 @@ Route::group(['prefix' => 'admin'], function () {
         Route::post('/list', [BookingListController::class, 'store'])->name('users.store');
         Route::get('/edit/{id}', [BookingListController::class, 'edit'])->name('users.edit');
         Route::put('/update/{id}', [BookingListController::class, 'update'])->name('users.update');
+        Route::post('/password/upadte', [BookingListController::class, 'passwordUpdate'])->name('users.password.update');
 
         Route::get('/PDF', [AdminBookingListController::class, 'downloadPdf'])->name('admin.pdf');
 

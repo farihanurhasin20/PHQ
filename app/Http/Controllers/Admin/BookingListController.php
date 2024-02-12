@@ -123,4 +123,43 @@ public function update(Request $request, $id){
                 ]);
                 }
     }
+    public function passwordUpdate(Request $request){
+        $users= User::find($request->user_id);
+// dd($request->all());
+        if (empty($users)){
+            session()->flash('error','User not found');
+            return response()->json([
+                'status'=> false,
+                'message'=> 'User not found'
+            ]);
+
+        }
+        $validator = Validator::make($request->all(),[
+            'user_id' => 'required',
+            'new_password' => 'nullable',
+            'confirm_password' => 'nullable|same:new_password',
+     
+    
+            ]);
+       
+
+            if($validator->passes()){
+                
+                $users -> password = $request->new_password;
+               
+                $users->save();
+
+                $request->session()->flash('success','User password successfully');
+                return response()->json([
+                    'status'=>true,
+                    'messege'=>'User updated successfully'
+                ]);
+
+            }else{
+                return response()->json([
+                    'status'  =>  false,
+                    'errors'=>$validator->errors()
+                ]);
+                }
+    }
 }

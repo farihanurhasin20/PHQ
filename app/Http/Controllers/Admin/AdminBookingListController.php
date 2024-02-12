@@ -313,7 +313,7 @@ public function reserved (Request $request)
       ]);
 
       $fileName = 'CheckIN-List' . now()->format('Y-m-d_His') . '.pdf';
-      return $pdf->download($fileName);
+      return $pdf->stream();
       }
     
 }
