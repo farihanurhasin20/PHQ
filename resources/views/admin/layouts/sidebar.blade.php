@@ -72,7 +72,7 @@
                 </li>
                 <li class="nav-item">
                     <a href="{{ route('admin.reports') }}" class="nav-link">
-                        <i class="nav-icon fas fa-coffee"></i>
+                        <i class="nav-icon fas fa-chart-bar"></i>
                         <p>Report</p>
                     </a>
                 </li>
