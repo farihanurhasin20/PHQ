@@ -57,7 +57,7 @@
                 </div>
 
             </form>
-            <div class="card-body">
+            <div class="card-body text-right">
                 <form action="{{ route('purchases.index') }}" method="GET">
                     @csrf
                     <div class="row">
@@ -102,10 +102,7 @@
                                 </button>
                             </div>
                         </div>
-
-
                     </div>
-
                 </form>
             </div>
 
@@ -144,7 +141,6 @@
                             <!-- <th colspan="7" align="right">Subtotal:</th> -->
                             <td colspan="7" align="right">Subtotal:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span></span></td>
                             <td>{{number_format($purchasesAmount,2)}}</td>
-                            <td></td> <!-- Empty cell to align with the last column -->
                         </tr>
                         @else
                         <tr>
