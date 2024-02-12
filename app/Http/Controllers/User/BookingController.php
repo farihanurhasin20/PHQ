@@ -388,14 +388,23 @@ class BookingController extends Controller
     }
     public function getMealDatesAllWithCount(){
     $today = Carbon::today();
-    // Get the current month
+    // Get the current month\
+
     $booking = Booking::whereYear('date', $today)
                      ->get()
                      ->groupBy('date') // Group by date
                      ->map(function ($dates) {
+                        $checkIn=0;
+                        foreach ($dates as $date){
+                        if($date->breakfast == 2 || $date->lunch == 2 || $date->dinner == 2){
+                            $checkIn +=1;
+                        }
+                    }
                          return [
                              "date" => $dates->first()->date, // Get the date
                              "count" => $dates->count(), // Get count of each date
+                             "checkIn" =>$checkIn, // Get count of each date
+
                          ];
                      });
     return response()->json(['date_counts' => $booking->values()], 200);
