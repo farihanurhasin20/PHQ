@@ -5,6 +5,7 @@ use App\Http\Controllers\Admin\HomeController;
 use App\Http\Controllers\Admin\LoginController;
 use App\Http\Controllers\Admin\BookingListController;
 use App\Http\Controllers\Admin\MasterDataController;
+use App\Http\Controllers\admin\MealRateController;
 use App\Http\Controllers\Admin\MealTimeController;
 use App\Http\Controllers\Admin\PurchaseController;
 use Illuminate\Support\Facades\Route;
@@ -105,7 +106,11 @@ Route::group(['prefix' => 'admin'], function () {
        
         Route::get('/get-purchases-id/{unitId}', [PurchaseController::class, 'getUnitId'])->name('purchases.getUnitId');
         Route::get('/purchases/create', [PurchaseController::class, 'create'])->name('purchases.create');
-        Route::post('/purchases/store', [PurchaseController::class, 'store'])->name('purchases.store');
+
+        //meal rate
+        Route::get('/meal_rate/index', [MealRateController::class, 'index'])->name('meal.rate.index');
+        Route::post('/meal_rate/store', [MealRateController::class, 'store'])->name('meal.rate.store');
+        
         
 
 

@@ -230,11 +230,37 @@ public function reserved (Request $request)
     public function breakfast_checkIn(Request $request)
     {
         $today = Carbon::today();
-
+        $userIds = Booking::whereDate('date', $today)
+        ->whereIn('user_id', $request->user_ids)
+        ->pluck('user_id')
+        ->toArray();
+        $bookingUserID =array_diff($request->user_ids,$userIds);
+        // dd( $bookingUserID);
+       foreach($bookingUserID as $bookingUserIDs ){
+        $user= User::find($bookingUserIDs);
+       
+        $booking = new Booking;
+        $booking->user_id = $bookingUserIDs;
+        $booking->date = $today;
+        
+        $booking->breakfast = 1;
+        $booking->booking_type = "By Admin";
+        $b_scan=$this->generateQRCode($today,$user,"breakfast");
+        // dd($b_scan);
+        $booking->b_scan = $b_scan;
+        $booking->lunch = 1;
+        $l_scan=$this->generateQRCode($today,$user,"lunch");;
+        $booking->l_scan = $l_scan;
+        $booking->dinner = 1;
+        $d_scan=$this->generateQRCode($today,$user,"dinnar");;
+        $booking->d_scan = $d_scan;
+        $booking->save(); 
+         
+       }
+        
         $booking = Booking::whereDate('date', $today)
         ->whereIn('user_id', $request->user_ids)
         ->get();
-               
         // if($booking->breakfast == 2){
             
         //     return response()->json(['message' => 'already exists'], 200);
@@ -254,7 +280,34 @@ public function reserved (Request $request)
     public function lunch_checkIn(Request $request)
     {
         $today = Carbon::today();
-
+        $userIds = Booking::whereDate('date', $today)
+        ->whereIn('user_id', $request->user_ids)
+        ->pluck('user_id')
+        ->toArray();
+        $bookingUserID =array_diff($request->user_ids,$userIds);
+        // dd( $bookingUserID);
+       foreach($bookingUserID as $bookingUserIDs ){
+        $user= User::find($bookingUserIDs);
+       
+        $booking = new Booking;
+        $booking->user_id = $bookingUserIDs;
+        $booking->date = $today;
+        
+        $booking->breakfast = 1;
+        $booking->booking_type = "By Admin";
+        $b_scan=$this->generateQRCode($today,$user,"breakfast");
+        // dd($b_scan);
+        $booking->b_scan = $b_scan;
+        $booking->lunch = 1;
+        $l_scan=$this->generateQRCode($today,$user,"lunch");;
+        $booking->l_scan = $l_scan;
+        $booking->dinner = 1;
+        $d_scan=$this->generateQRCode($today,$user,"dinnar");;
+        $booking->d_scan = $d_scan;
+        $booking->save(); 
+         
+       }
+        
         $booking = Booking::whereDate('date', $today)
         ->whereIn('user_id', $request->user_ids)
         ->get();
@@ -278,7 +331,34 @@ public function reserved (Request $request)
     public function dinner_checkIn(Request $request)
     {
         $today = Carbon::today();
-
+        $userIds = Booking::whereDate('date', $today)
+        ->whereIn('user_id', $request->user_ids)
+        ->pluck('user_id')
+        ->toArray();
+        $bookingUserID =array_diff($request->user_ids,$userIds);
+        // dd( $bookingUserID);
+       foreach($bookingUserID as $bookingUserIDs ){
+        $user= User::find($bookingUserIDs);
+       
+        $booking = new Booking;
+        $booking->user_id = $bookingUserIDs;
+        $booking->date = $today;
+        
+        $booking->breakfast = 1;
+        $booking->booking_type = "By Admin";
+        $b_scan=$this->generateQRCode($today,$user,"breakfast");
+        // dd($b_scan);
+        $booking->b_scan = $b_scan;
+        $booking->lunch = 1;
+        $l_scan=$this->generateQRCode($today,$user,"lunch");;
+        $booking->l_scan = $l_scan;
+        $booking->dinner = 1;
+        $d_scan=$this->generateQRCode($today,$user,"dinnar");;
+        $booking->d_scan = $d_scan;
+        $booking->save(); 
+         
+       }
+        
         $booking = Booking::whereDate('date', $today)
         ->whereIn('user_id', $request->user_ids)
         ->get();
