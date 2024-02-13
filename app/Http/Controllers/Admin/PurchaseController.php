@@ -60,6 +60,7 @@ class PurchaseController extends Controller
 
     public function store(Request $request)
     {
+        dd($request->all());
         $validator = Validator::make($request->all(),[
             'purchaseNumber' => 'required|string',
             'date' => 'required|date',

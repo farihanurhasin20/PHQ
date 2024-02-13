@@ -77,7 +77,7 @@
 				<!-- /.content -->
 			</div>
 			<!-- /.content-wrapper -->
-			<footer class="main-footer">
+			<footer class="main-footer text-center">
                 <p>&copy; <span id="currentYear"></span> <a target="_blank" href="https://opus-bd.com/">Opus Technology Limited</a> All rights reserved.</p>
 			</footer>
 
