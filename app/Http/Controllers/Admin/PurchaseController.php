@@ -4,9 +4,11 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Bonus;
+use App\Models\Booking;
 use App\Models\FundingSource;
 use App\Models\Item;
 use App\Models\ItemUnits;
+use App\Models\MealRate;
 use App\Models\Purchase;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Http\Request;
@@ -77,6 +79,7 @@ class PurchaseController extends Controller
 
             $grandTotal = 0;
             $Source = 0;
+            $memberSourceId = 0;
             foreach ($cartItemsArray as $item) {
                 $purchase = new Purchase();
                 $purchase->purchase_number = $request->input('purchaseNumber');
@@ -88,6 +91,7 @@ class PurchaseController extends Controller
                 $purchase->grand_total = $grandTotal;
                 $itemUnit = Item::find($item['item_id']);
                 $purchase->founding_source_id = $item['founding_source_id'] ?? null;
+                $memberSourceId = $item['founding_source_id'] ?? null;
                 $purchase->item_id = $item['item_id'] ?? null;
                 $purchase->item_unit_id = $itemUnit->item_units_id ?? null;
                 // dd($purchase->toArray());
@@ -100,25 +104,26 @@ class PurchaseController extends Controller
 
             foreach ($bonusItemsArray as $bonusItem) {
                 $bonus = new Bonus();
+                if ($bonusItem['founding_source_id'] != "") {
+                    $Bonus += $bonusItem['amount'];
+                    // Find the funding source
+                    $fundingSource = FundingSource::find($bonusItem['founding_source_id']);
 
-                $Bonus += $bonusItem['amount'];
-                // Find the funding source
-                $fundingSource = FundingSource::find($bonusItem['founding_source_id']);
+                    $bonus->founding_source_id = $bonusItem['founding_source_id'];
+                    $bonus->amount = $bonusItem['amount'];
+                    $bonus->date = $request->input('date');
 
-                $bonus->founding_source_id = $bonusItem['founding_source_id'];
-                $bonus->amount = $bonusItem['amount'];
-                $bonus->date = $request->input('date');
+                    $bonus->save();
 
-                $bonus->save();
+                    // Subtract the amount from the current fund
+                    $bonusFund = $fundingSource->current_fund;
 
-                // Subtract the amount from the current fund
-                $bonusFund = $fundingSource->current_fund;
+                    $updatedBonusFund = $bonusFund - $bonusItem['amount'];
 
-                $updatedBonusFund = $bonusFund - $bonusItem['amount'];
-
-                // Update the current fund of the funding source
-                $fundingSource->current_fund = $updatedBonusFund;
-                $fundingSource->save();
+                    // Update the current fund of the funding source
+                    $fundingSource->current_fund = $updatedBonusFund;
+                    $fundingSource->save();
+                }
             }
 
 
@@ -132,6 +137,30 @@ class PurchaseController extends Controller
             // Update the current fund of the funding source
             $foundingSource->current_fund = $updatedFund;
             $foundingSource->save();
+
+            $bonus = new Bonus();
+            $bonus->founding_source_id =  $memberSourceId;
+            $bonus->amount = $Source - $Bonus;
+            $bonus->date = $request->input('date');
+            $bonus->save();
+
+            $mealRate = MealRate::where('date', $request->input('date'))->first(); // Use first() to get the first matching record
+
+            if (!$mealRate) {
+                $mealRate = new MealRate();
+                $mealRate->date = $request->input('date');
+            }
+
+            $amount = Bonus::where('date', $request->input('date'))
+                ->where('founding_source_id', $item['founding_source_id'])
+                ->sum('amount');
+
+            $userNumber = Booking::where('date', $request->input('date'))->count();
+            $amount = $userNumber > 0 ? $amount / $userNumber : 0;
+
+            $mealRate->rate = $amount;
+
+            
 
 
             // dd($foundingSource->toArray());
@@ -177,5 +206,25 @@ class PurchaseController extends Controller
         $uniqueCode = $prefix . '-' . $currentYearMonth . '-' . $paddedValue;
 
         return $uniqueCode;
+    }
+    public function fundlist($date)
+    {
+        $availableFundings = Bonus::where('date', $date)
+            ->latest('bonuses.id')
+            ->leftJoin('funding_sources', 'funding_sources.id', '=', 'bonuses.founding_source_id')
+            ->get();
+        // dd($availableFundings);
+        // if (!empty($request->get('keyword'))) {
+        //     $keyword = $request->get('keyword');
+        //     $availableFundings = $availableFundings->where(function ($query) use ($keyword) {
+        //         $query->where('available_fundings.total_amount', 'like', '%' . $keyword . '%')
+        //             ->orWhere('funding_sources.source', 'like', '%' . $keyword . '%');
+        //     });
+        // }
+
+        // $availableFundings = $availableFundings->latest()->paginate(10);
+        $foundingSource = Bonus::where('date', $date)->get();
+
+        return view('admin.purchase.funding_list', compact('availableFundings'));
     }
 }
