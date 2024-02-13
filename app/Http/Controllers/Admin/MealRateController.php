@@ -24,9 +24,10 @@ class MealRateController extends Controller
             $endDate = $end_date;
             $mealRates = MealRate::whereBetween("date", [$start_date, $end_date])->get();
             // $purchasesAmount = $mealRates->sum('grand_total');
+           
             $mealRates=MealRate::whereBetween("date", [$start_date, $end_date])->paginate(20);
         }
-        
+        //  $session->put('mealRates', $mealRates);
 // dd($purchasesAmount,$purchases);
         // $datesFromController = $start_date;
         return view('admin.meal_rate.index', compact('mealRates','startDate','endDate'));
