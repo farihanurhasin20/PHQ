@@ -46,66 +46,27 @@
 </head>
 <body>
     
-<p>{{ \Carbon\Carbon::now()->format('l, F j, Y') }}</p>
+<!-- <p>{{ \Carbon\Carbon::now()->format('l, F j, Y') }}</p> -->
 
-<h1>Today's CheckIn History</h1>
+<h1>Meal Rate</h1>
 <table>
     <tr>
-        <th>Roll</th>
-        <th>Bp_num</th>
-        <th>Name</th>
-        <th>Breakfast</th>
-        <th>Lunch</th>
-        <th>Dinner</th>
+    <th>id</th>
+
+        <th>date</th>
+        <th>rate</th>
+        
     </tr> 
-    @php
-    $totalBreakfastCount = 0;
-    $totalLunchCount = 0;
-    $totalDinnerCount = 0;
-    @endphp
-    
-    @foreach ($users as $user)
+ 
+    @foreach ($mealRates as $mealRate)
     <tr>
       
         <tr>
-            <td>{{ $user->id }}</td>
-            <td>{{ $user->bp_num }}</td>
-            <td>{{ $user->name }}</td>
-            @php
-            $userBooking = $bookings->where('user_id', $user->id)->first();
-            @endphp
-            <td>
-                @if ($userBooking && $userBooking->breakfast == 2)
-                <p class="text-success">Yes</p>
-                @php
-                $totalBreakfastCount++;
-                @endphp
-                @else
-                <p class="text-danger">No</p>
-                @endif
-            </td>
+        <td>{{ $mealRate->id }}</td>
 
-            <td>
-                @if ($userBooking && $userBooking->lunch == 2)
-                <p class="text-success">Yes</p>
-                @php
-                $totalLunchCount++;
-                @endphp
-                @else
-                <p class="text-danger">No</p>
-                @endif
-            </td>
-
-            <td>
-                @if ($userBooking && $userBooking->dinner == 2)
-                <p class="text-success">Yes</p>
-                @php
-                $totalDinnerCount++;
-                @endphp
-                @else
-                <p class="text-danger">No</p>
-                @endif
-            </td>
+            <td>{{ $mealRate->date }}</td>
+            <td>{{ $mealRate->rate }}</td>
+           
             
         </tr>
     </tr>
@@ -113,8 +74,6 @@
 </table>
 <br>
 <br>
-<p>Total People with BreakFast: {{ $totalBreakfastCount }}</p>
-<p>Total People with Lunch: {{ $totalLunchCount }}</p>
-<p>Total People with Dinner: {{ $totalDinnerCount }}</p>
+
 </body>
 </html>

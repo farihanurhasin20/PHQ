@@ -7,6 +7,11 @@
             <div class="col-sm-6">
                 <h1>Meal Rate list</h1>
             </div>
+            <div class="col-sm-6 text-right">
+                <a href="{{ route('meal.downloadPDF') }}" class="btn btn-primary">
+                    <i class="fas fa-user-plus"></i> Download 
+                </a>
+            </div>
         
         </div>
     </div>

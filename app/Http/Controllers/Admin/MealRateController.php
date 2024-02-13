@@ -6,6 +6,8 @@ use App\Http\Controllers\Controller;
 use App\Models\MealRate;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Session;
+use PDF;
 
 class MealRateController extends Controller
 {
@@ -27,7 +29,7 @@ class MealRateController extends Controller
            
             $mealRates=MealRate::whereBetween("date", [$start_date, $end_date])->paginate(20);
         }
-        //  $session->put('mealRates', $mealRates);
+        $request->session()->put('mealRates', $mealRates);
 // dd($purchasesAmount,$purchases);
         // $datesFromController = $start_date;
         return view('admin.meal_rate.index', compact('mealRates','startDate','endDate'));
@@ -42,4 +44,20 @@ class MealRateController extends Controller
             'message' => 'Purchase created successfully.'
         ]);
     }
+    public function downloadPDF(Request $request)
+    {
+    
+         
+        $today = Carbon::today();
+        $userId = $request->session()->get('mealRates');
+        // dd($userId);
+       
+        $pdf = PDF::loadView('admin.meal_rate.pdf', [
+          'mealRates' => $userId,
+      ]);
+
+      $fileName = 'CheckIN-List' . now()->format('Y-m-d_His') . '.pdf';
+      return $pdf->stream();
+      }
+    
 }
