@@ -13,6 +13,7 @@ return new class extends Migration
     {
         Schema::create('bonuses', function (Blueprint $table) {
             $table->id();
+            $table->date('date');
             $table->string('founding_source_id');
             $table->double('amount', 10, 2);
             $table->timestamps();
