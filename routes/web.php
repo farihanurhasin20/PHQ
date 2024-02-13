@@ -112,6 +112,7 @@ Route::group(['prefix' => 'admin'], function () {
         //meal rate
         Route::get('/meal_rate/index', [MealRateController::class, 'index'])->name('meal.rate.index');
         Route::post('/meal_rate/store', [MealRateController::class, 'store'])->name('meal.rate.store');
+        Route::get('/meal_rate/downloadPDF', [MealRateController::class, 'downloadPDF'])->name('meal.downloadPDF');
         
         
 
