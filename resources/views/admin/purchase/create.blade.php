@@ -154,7 +154,7 @@
                                 <!-- Variation option name field  -->
                                 <div class="col-4 form-group">
                                     <div class="col-md-12">
-                                        <select class="form-control @error('bonus_source_id') is-invalid @enderror" id="founding_source_id" name="arr[0][founding_source_id]" required>
+                                        <select class="form-control @error('bonus_source_id') is-invalid @enderror" id="founding_source_id" name="founding_source_id" required>
                                             <option value="">Select any Fund</option>
                                             @foreach ($foundingSources as $foundingSource)
                                             @if ($foundingSource->id != 1)
@@ -173,7 +173,7 @@
                                 <!-- Variation option code field  -->
                                 <div class="col-6 form-group">
                                     <div class="col-md-12">
-                                        <input class="form-control @error('amount') is-invalid @enderror" placeholder="Total amount" id="amount" name="arr[0][amount]" type="text" value="{{ old('amount') }}">
+                                        <input class="form-control @error('amount') is-invalid @enderror" placeholder="Total amount" id="amount" name="amount" type="text" value="{{ old('amount') }}">
                                         <p class="error"></p>
                                         @error('code')
                                         <span class="text-danger">{{ $message }}</span>
@@ -394,6 +394,11 @@
                 });
  // Extract data from the bonus area
  var bonusItems = [];
+ var bonusData = {
+    founding_source_id: $('#founding_source_id').val(), // Get the value of the selected option directly
+    amount: $('#amount').val(), // Assuming #amount is the id of the input element
+};
+bonusItems.push(bonusData);
     $('#bonus_range_area .row').each(function() {
         var bonusData = {
             founding_source_id: $(this).find('select').val(),
