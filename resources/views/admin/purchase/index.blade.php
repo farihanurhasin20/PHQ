@@ -132,7 +132,9 @@
                             <td>{{ $purchase->item->item_name }}</td>
                             <td>{{ $purchase->qty }}</td>
                             <td>{{ $purchase->unit_price }}</td>
-                            <td>{{ $purchase->foundingSource->source }}</td>
+                            
+                            <td><a href="{{route('purchases.fundlist', $purchase->date)}}">{{ $purchase->foundingSource->source }}</a></td>
+                            
                             <td>{{ $purchase->grand_total }}</td>
                             
                         </tr>

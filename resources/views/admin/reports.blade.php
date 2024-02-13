@@ -54,6 +54,21 @@
                 </a>
             </div>
 
+            <div class="col-lg-3 col-md-6 col-sm-12">
+            <a href="{{ route('meal.rate.index') }}" class="card-link">
+                <div class="small-box card" style="padding-top: 20px;">
+                    <div class="inner d-flex align-items-center justify-content-center">
+                        <div class="col-lg-6 col-6 text-center">
+                            <h3><i class="far fa-calendar-check"></i></h3>
+                            <p> Generate Meal Rate</p>
+                        </div>
+                    </div>
+                    <div class="icon">
+                        <i class="ion ion-bag"></i>
+                    </div>
+                </div>
+                </a>
+            </div>
          
             <div class="col-lg-3 col-md-6 col-sm-12">
             <a href="{{ route('admin.pdf') }}" class="card-link">
