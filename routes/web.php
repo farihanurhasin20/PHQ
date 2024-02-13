@@ -106,6 +106,7 @@ Route::group(['prefix' => 'admin'], function () {
        
         Route::get('/get-purchases-id/{unitId}', [PurchaseController::class, 'getUnitId'])->name('purchases.getUnitId');
         Route::get('/purchases/create', [PurchaseController::class, 'create'])->name('purchases.create');
+        Route::post('/purchases/store', [PurchaseController::class, 'store'])->name('purchases.store');
 
         //meal rate
         Route::get('/meal_rate/index', [MealRateController::class, 'index'])->name('meal.rate.index');
