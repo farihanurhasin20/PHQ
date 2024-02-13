@@ -331,25 +331,25 @@
 
         var fundingSourceSelect = $('#founding_source_id')[0];
 
-        function validateAvailableFund() {
-            const selectedOptions = Array.from(foundingSourceSelect.options).filter(option => {
-                const currentFund = parseFloat(option.dataset.currentFund) || 0;
-                return grandTotal <= currentFund;
-            });
+        // function validateAvailableFund() {
+        //     const selectedOptions = Array.from(foundingSourceSelect.options).filter(option => {
+        //         const currentFund = parseFloat(option.dataset.currentFund) || 0;
+        //         return grandTotal <= currentFund;
+        //     });
 
-            // Show/hide options based on the total price
-            Array.from(foundingSourceSelect.options).forEach(option => {
-                option.style.display = 'none';
-            });
+        //     // Show/hide options based on the total price
+        //     Array.from(foundingSourceSelect.options).forEach(option => {
+        //         option.style.display = 'none';
+        //     });
 
-            if (selectedOptions.length > 0) {
-                selectedOptions.forEach(option => {
-                    option.style.display = '';
-                });
-            } else {
-                alert("Sorry! No funds are available.");
-            }
-        }
+        //     if (selectedOptions.length > 0) {
+        //         selectedOptions.forEach(option => {
+        //             option.style.display = '';
+        //         });
+        //     } else {
+        //         alert("Sorry! No funds are available.");
+        //     }
+        // }
 
         $(document).ready(function() {
             var i = 0;
@@ -375,6 +375,7 @@
                 $(this).closest('.row').remove();
             });
 
+
             $('#submitBtn').click(function() {
                 // Extract data from the form
                 var formData = $('#userForm').serializeArray();
@@ -391,61 +392,94 @@
                         founding_source_id: 1, // Add the selected funding source to itemData
                     };
                     cartItems.push(itemData);
+
                 });
- // Extract data from the bonus area
- var bonusItems = [];
- var bonusData = {
-    founding_source_id: $('#founding_source_id').val(), // Get the value of the selected option directly
-    amount: $('#amount').val(), // Assuming #amount is the id of the input element
-};
-bonusItems.push(bonusData);
-    $('#bonus_range_area .row').each(function() {
-        var bonusData = {
-            founding_source_id: $(this).find('select').val(),
-            amount: $(this).find('input[name$="[amount]"]').val(),
-        };
-        bonusItems.push(bonusData);
-    });
 
-    // Add cart items and bonus items data to the form data
-    formData.push({
-        name: 'cartItems',
-        value: JSON.stringify(cartItems)
-    });
-    formData.push({
-        name: 'bonusItems',
-        value: JSON.stringify(bonusItems)
-    });
 
-    // Make sure CSRF token is included
-    formData.push({
-        name: '_token',
-        value: '{{ csrf_token() }}'
-    });
 
-    // Make an AJAX request to store the data
-    $.ajax({
-        url: '{{ route("purchases.store") }}',
-        method: 'POST',
-        data: formData,
-        success: function(response) {
-            console.log(response.message);
+                // Extract data from the bonus area
+                var bonusItems = [];
+                var bonusData = {
+                    founding_source_id: $('#founding_source_id').val(), // Get the value of the selected option directly
+                    amount: $('#amount').val(), // Assuming #amount is the id of the input element
+                };
+                bonusItems.push(bonusData);
+                $('#bonus_range_area .row').each(function() {
+                    var bonusData = {
+                        founding_source_id: $(this).find('select').val(),
+                        amount: $(this).find('input[name$="[amount]"]').val(),
+                    };
+                    bonusItems.push(bonusData);
 
-            if (response["status"] == true) {
-                window.location.href = '{{ route("purchases.index") }}';
-            } else {
-                var errors = response['errors'];
-                $(".error").removeClass('is-invalid').html(''); // Remove error classes and clear error messages
-                $("input[type='text'], select").removeClass('is-invalid');
-                $.each(errors, function(key, value) {
-                    $(`#${key}`).addClass('is-invalid'); // Add the 'is-invalid' class to the input
-                    $(`#${key}`).next('p').addClass('invalid-feedback').html(value); // Add the error message
                 });
-            }
-        },
-        error: function(jqXHR, exception) {
-            console.log("Something went wrong");
-        }
+
+                // Calculate the total amount of bonus items
+                var totalBonusAmount = bonusItems.reduce(function(acc, bonusItem) {
+                    return acc + parseFloat(bonusItem.amount);
+                }, 0);
+                var foundingSources = <?php echo json_encode($foundingSources); ?>;
+                var foundingsource = 0;
+                foundingSources.forEach(function(foundingSource) {
+                    if (foundingSource.id === 1) {
+                        foundingsource = foundingSource.current_fund;
+                    }
+                });
+
+                // Calculate the total required amount
+                console.log('Total Required Amount:', totalRequiredAmount);
+                if (isNaN(totalBonusAmount)) {
+                    totalBonusAmount = 0;
+                }
+                var totalRequiredAmount = parseFloat(foundingsource) + totalBonusAmount;
+
+                console.log('Total Required Amount:', totalRequiredAmount);
+                console.log('Grand:', grandTotal);
+                console.log('Bonus:', totalBonusAmount);
+
+                // Check if grandTotal is smaller than totalRequiredAmount
+                if (grandTotal > totalRequiredAmount) {
+                    alert('Insufficient balance');
+                    return; // Exit the function if validation fails
+                }
+
+                formData.push({
+                    name: 'cartItems',
+                    value: JSON.stringify(cartItems)
+                });
+                formData.push({
+                    name: 'bonusItems',
+                    value: JSON.stringify(bonusItems)
+                });
+
+                // Make sure CSRF token is included
+                formData.push({
+                    name: '_token',
+                    value: '{{ csrf_token() }}'
+                });
+
+                // Make an AJAX request to store the data
+                $.ajax({
+                    url: '{{ route("purchases.store") }}',
+                    method: 'POST',
+                    data: formData,
+                    success: function(response) {
+                        console.log(response.message);
+
+                        if (response["status"] == true) {
+                            window.location.href = '{{ route("purchases.index") }}';
+                        } else {
+                            var errors = response['errors'];
+                            $(".error").removeClass('is-invalid').html(''); // Remove error classes and clear error messages
+                            $("input[type='text'], select").removeClass('is-invalid');
+                            $.each(errors, function(key, value) {
+                                $(`#${key}`).addClass('is-invalid'); // Add the 'is-invalid' class to the input
+                                $(`#${key}`).next('p').addClass('invalid-feedback').html(value); // Add the error message
+                            });
+                        }
+                    },
+                    error: function(jqXHR, exception) {
+                        console.log("Something went wrong");
+                    }
                 });
             });
         });
