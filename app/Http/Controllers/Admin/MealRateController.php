@@ -7,6 +7,7 @@ use App\Models\Bonus;
 use App\Models\Booking;
 use App\Models\MealRate;
 use App\Models\Purchase;
+use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Session;
@@ -22,7 +23,7 @@ class MealRateController extends Controller
         $totalAmount=0;
         $rate=0;
         $mealRates = MealRate::orderBy('date', 'DESC')->paginate(10);
-        $purchasesAll = MealRate::all();
+        
         // $purchasesAmount=$purchasesAll->sum('grand_total');
         if ($request->filled('fromDate') && $request->filled('toDate')) {
             $start_date = $request->fromDate;
@@ -40,6 +41,25 @@ class MealRateController extends Controller
         //    dd($totalAmount,$userNumber);
             $mealRates=MealRate::whereBetween("date", [$start_date, $end_date])->paginate(20);
         }
+        $today = Carbon::today();
+
+        $mealRate = MealRate::where('date', $today)->first(); // Use first() to get the first matching record
+
+        if ($mealRate== null) {
+            $mealRate = new MealRate();
+            $mealRate->date = $today;
+        }
+
+        $amount = Bonus::where('date', $today)
+            ->where('founding_source_id', 1)
+            ->sum('amount');
+
+        $userNumber = Booking::where('date', $today)->count();
+        $amount = $userNumber > 0 ? $amount / $userNumber : 0;
+
+        $mealRate->rate = $amount;
+
+        $mealRate->save();
 
         $request->session()->put('startDate', $startDate);
         $request->session()->put('endDate', $endDate);
@@ -91,6 +111,33 @@ class MealRateController extends Controller
         
     //           );
       return $pdf->stream();
+      }
+      public function checkinreport(Request $request){
+        $date='--/--/--';
+       
+        if($request->date !=null){
+        $date=$request->date;
+        // dd($request->date);
+
+        }
+        $users = User::where('role', 1)->latest();
+
+        if (!empty($request->get('keyword'))) {
+            $keyword = $request->get('keyword');
+            $users = $users->where('id', 'like', '%' . $keyword . '%');
+        } 
+    
+        $users = $users->paginate(10);
+    
+        // $tomorrow = Carbon::tomorrow(); // Get tomorrow's date
+    
+        $bookings = Booking::whereIn('user_id', $users->pluck('id'))
+            ->whereDate('date', $request->date) // Filter for tomorrow's date
+            ->latest()
+            ->get();
+            $request->session()->put('date', $date);
+        
+        return view('admin.meal_rate.check_in_report', compact('bookings', 'users','date'));
       }
     
 }
