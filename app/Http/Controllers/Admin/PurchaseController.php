@@ -155,7 +155,7 @@ class PurchaseController extends Controller
 
             $mealRate = MealRate::where('date', $request->input('date'))->first(); // Use first() to get the first matching record
 
-            if (!$mealRate) {
+            if ($mealRate== null) {
                 $mealRate = new MealRate();
                 $mealRate->date = $request->input('date');
             }

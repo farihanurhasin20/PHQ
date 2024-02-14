@@ -375,21 +375,24 @@ public function reserved (Request $request)
     }
 
     public function downloadPdf(Request $request){
-        
+        $today=$request->session()->get('date');
+
         $users = User::where('role', 1)->get();
         if (!empty($request->get('keyword'))) {
             $keyword = $request->get('keyword');
             $users = $users->where('id', 'like', '%' . $keyword . '%');
         } 
          
-        $today = Carbon::today();
+      
         $bookings = Booking::whereIn('user_id', $users->pluck('id'))
             ->whereDate('date', $today)
             ->latest()
             ->get();
+            $formattedDate = Carbon::createFromFormat('Y-m-d', $today)->format('j F, Y');
         $pdf = PDF::loadView('PDF', [
           'users' => $users,
-          'bookings' => $bookings
+          'bookings' => $bookings,
+          'date' => $formattedDate,
       ]);
 
       $fileName = 'CheckIN-List' . now()->format('Y-m-d_His') . '.pdf';
