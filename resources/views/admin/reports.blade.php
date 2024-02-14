@@ -60,7 +60,7 @@
                     <div class="inner d-flex align-items-center justify-content-center">
                         <div class="col-lg-6 col-6 text-center">
                             <h3><i class="far fa-calendar-check"></i></h3>
-                            <p> Generate Meal Rate</p>
+                            <p> Date Wise Meal Rate</p>
                         </div>
                     </div>
                     <div class="icon">
@@ -71,12 +71,12 @@
             </div>
          
             <div class="col-lg-3 col-md-6 col-sm-12">
-            <a href="{{ route('admin.pdf') }}" class="card-link">
+            <a href="{{ route('checkin.report') }}" class="card-link">
                 <div class="small-box card" style="padding-top: 20px;">
                     <div class="inner d-flex align-items-center justify-content-center">
                         <div class="col-lg-6 col-6 text-center">
                             <h3><i class="fas fa-download"></i></h3>
-                            <p>Generate Report</p>
+                            <p>Today's Meal Information</p>
                         </div>
                     </div>
                     <div class="icon">
