@@ -30,14 +30,16 @@
                                 <th>ID</th>
                                 <th>Source</th>
                                 <th>Available Fund</th>
+                                <th>Action</th>
                             </tr>
                         </thead>
                         <tbody>
                             @forelse ($fundingSources as $fundingSource)
                                 <tr>
-                                    <td><a href="{{route('fund_history.index', ['id' => $fundingSource->id])}}">{{ $fundingSource->id }}</a></td>
+                                    <td>{{ $fundingSource->id }}</td>
                                     <td>{{ $fundingSource->source }}</td>
                                     <td>৳ {{ $fundingSource->current_fund }}</td>
+                                    <td><a href="{{route('fund_history.index', ['id' => $fundingSource->id])}}"><i class="nav-icon fas fa-eye"></i></a></td>
                                 </tr>
                             @empty
                             <tr>
