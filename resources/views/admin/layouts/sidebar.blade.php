@@ -28,7 +28,7 @@
                 <li class="nav-item">
                     <a class="nav-link" href="{{ route('admin.purchase') }}" >
                         <i class="nav-icon fas fa-cart-plus"></i>
-                        <p>Local Purchase <span class="caret"></span></p>
+                        <p> Purchase <span class="caret"></span></p>
                     </a>
                     <!-- <ul class="dropdown-menu">
                         <li>
