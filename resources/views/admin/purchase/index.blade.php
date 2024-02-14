@@ -119,7 +119,7 @@
                             <th>Unit Price</th>
                             <th>Funding Source</th>
                             <th>Total Price</th>
-                            
+
                         </tr>
                     </thead>
                     <tbody>
@@ -132,17 +132,30 @@
                             <td>{{ $purchase->item->item_name }}</td>
                             <td>{{ $purchase->qty }}</td>
                             <td>{{ $purchase->unit_price }}</td>
-                            
-                            <td><a href="{{route('purchases.fundlist', $purchase->date)}}">{{ $purchase->foundingSource->source }}</a></td>
-                            
+
+                            <td><a href="{{route('purchases.fundlist', $purchase->date)}}">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <i class="nav-icon fas fa-eye"></i>
+                                </a></td>
+
                             <td>{{ $purchase->grand_total }}</td>
-                            
+
                         </tr>
                         @endforeach
                         <tr>
                             <!-- <th colspan="7" align="right">Subtotal:</th> -->
                             <td colspan="7" align="right">Subtotal:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span></span></td>
                             <td>{{number_format($purchasesAmount,2)}}</td>
+                        </tr>
+
+                        <tr>
+                            <!-- <th colspan="7" align="right">Subtotal:</th> -->
+                            <td colspan="7" align="right">Total Bonus:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span></span></td>
+                            <td>{{number_format($bonusAmount,2)}}</td>
+                        </tr>
+
+                        <tr>
+                            <!-- <th colspan="7" align="right">Subtotal:</th> -->
+                            <td colspan="7" align="right">Total after Bonus:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span></span></td>
+                            <td>{{number_format($purchasesAmount-$bonusAmount,2)}}</td>
                         </tr>
                         @else
                         <tr>

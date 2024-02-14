@@ -48,6 +48,12 @@ class MasterDataController extends Controller
         $availableFundings = AvailableFunding::select('available_fundings.*', 'funding_sources.source as fundingSource')
             ->latest('available_fundings.id')
             ->leftJoin('funding_sources', 'funding_sources.id', 'available_fundings.funding_source_id');
+        
+            if ($request->has('id')) {
+                $id = $request->get('id');
+                // Filter by 'founding_source_id'
+                $availableFundings = $availableFundings->where('available_fundings.funding_source_id', $id);
+            }
 
         if (!empty($request->get('keyword'))) {
             $keyword = $request->get('keyword');
