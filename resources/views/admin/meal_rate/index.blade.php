@@ -9,7 +9,7 @@
             </div>
             <div class="col-sm-6 text-right">
                 <a href="{{ route('meal.downloadPDF') }}" class="btn btn-primary">
-                    <i class="fas fa-user-plus"></i> Download 
+                    Download 
                 </a>
             </div>
         
@@ -136,7 +136,34 @@
                             <td colspan="8">No purchases available.</td>
                         </tr>
                         @endif
+                        
+                    </tbody>
 
+                </table>
+            </div>
+            <div class="card-body table-responsive p-0">
+                <table class="table table-hover text-nowrap">
+                    
+                    <tbody>
+                        
+                        <div class="card-footer clearfix">
+                        <tr>
+                            <th>start date</th>
+                            <th>end date</th>
+                             <th>total amount</th>
+                             <th>Total Booked</th>
+                             <th>Rate</th>
+                            
+                        </tr>
+                        <tr>
+                            <td>{{ $startDate }}</td>
+                            <td>{{ $endDate }}</td>
+                             <td>{{ $totalAmount }}</td>
+                             <td>{{ $userNumber}}</td>
+                             <td>{{ number_format($rate, 2) }}</td>
+                            
+                        </tr>
+                        </div>
                     </tbody>
 
                 </table>
