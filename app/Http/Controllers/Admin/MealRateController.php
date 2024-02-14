@@ -3,7 +3,10 @@
 namespace App\Http\Controllers\admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\Bonus;
+use App\Models\Booking;
 use App\Models\MealRate;
+use App\Models\Purchase;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Session;
@@ -15,7 +18,9 @@ class MealRateController extends Controller
     {
         $startDate='--/--/--';
         $endDate='--/--/--';
-        
+        $userNumber=0;
+        $totalAmount=0;
+        $rate=0;
         $mealRates = MealRate::orderBy('date', 'DESC')->paginate(10);
         $purchasesAll = MealRate::all();
         // $purchasesAmount=$purchasesAll->sum('grand_total');
@@ -24,15 +29,23 @@ class MealRateController extends Controller
             $end_date = $request->toDate;
             $startDate = $start_date;
             $endDate = $end_date;
+            $totalAmount = Bonus::whereBetween("date", [$start_date, $end_date])
+                ->where('founding_source_id', 1)
+                ->sum('amount');
+
+            $userNumber = Booking::whereBetween("date", [$start_date, $end_date])->count();
+            $rate = $userNumber > 0 ? $totalAmount / $userNumber : 0;
             $mealRates = MealRate::whereBetween("date", [$start_date, $end_date])->get();
             // $purchasesAmount = $mealRates->sum('grand_total');
-           
+        //    dd($totalAmount,$userNumber);
             $mealRates=MealRate::whereBetween("date", [$start_date, $end_date])->paginate(20);
         }
-        $request->session()->put('mealRates', $mealRates);
+
+        $request->session()->put('startDate', $startDate);
+        $request->session()->put('endDate', $endDate);
 // dd($purchasesAmount,$purchases);
         // $datesFromController = $start_date;
-        return view('admin.meal_rate.index', compact('mealRates','startDate','endDate'));
+        return view('admin.meal_rate.index', compact('mealRates','startDate','endDate','totalAmount','userNumber','rate'));
     }
     public function store(Request $request)
     {
@@ -49,14 +62,34 @@ class MealRateController extends Controller
     
          
         $today = Carbon::today();
-        $userId = $request->session()->get('mealRates');
+        $startDate = $request->session()->get('startDate');
+        $endDate = $request->session()->get('endDate');
+        $purchases = Bonus::whereBetween("date", [$startDate, $endDate])->get();
+        $mealRates = MealRate::whereBetween("date", [$startDate, $endDate])->get();
+        $booking = Booking::whereBetween("date", [$startDate, $endDate])->get();
+
+
         // dd($userId);
-       
+        
         $pdf = PDF::loadView('admin.meal_rate.pdf', [
-          'mealRates' => $userId,
+          'purchase' => $purchases,
+          'mealRates' => $mealRates,
+          'booking' => $booking,
+          'startDate' => $startDate,
+          'endDate' => $endDate,
       ]);
 
       $fileName = 'CheckIN-List' . now()->format('Y-m-d_His') . '.pdf';
+    //  return view('admin.meal_rate.pdf', [
+    //         'purchase' => $purchases,
+    //         'mealRates' => $mealRates,
+    //         'booking' => $booking,
+    //         'startDate' => $startDate,
+    //         'endDate' => $endDate,
+        
+    //         ]
+        
+    //           );
       return $pdf->stream();
       }
     
