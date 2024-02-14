@@ -35,6 +35,10 @@ class PurchaseController extends Controller
         $purchases = Purchase::orderBy('date', 'DESC')->paginate(10);
         $purchasesAll = Purchase::all();
         $purchasesAmount = $purchasesAll->sum('grand_total');
+
+        $bonusAll = Bonus::all();
+        $bonusAmount = $bonusAll->where('founding_source_id', '!=', 1)->sum('amount');
+
         if ($request->filled('fromDate') && $request->filled('toDate')) {
             $start_date = $request->fromDate;
             $end_date = $request->toDate;
@@ -42,12 +46,17 @@ class PurchaseController extends Controller
             $endDate = $end_date;
             $purchases = Purchase::whereBetween("date", [$start_date, $end_date])->get();
             $purchasesAmount = $purchases->sum('grand_total');
+
+            $bonus = Bonus::whereBetween("date", [$start_date, $end_date])->get();
+            $bonusAmount = $bonus->where('founding_source_id', '!=', 1)->sum('amount');
+
+
             $purchases = Purchase::whereBetween("date", [$start_date, $end_date])->paginate(20);
         }
 
         // dd($purchasesAmount,$purchases);
         // $datesFromController = $start_date;
-        return view('admin.purchase.index', compact('purchases', 'startDate', 'endDate', 'purchasesAmount'));
+        return view('admin.purchase.index', compact('purchases', 'startDate', 'endDate', 'purchasesAmount', 'bonusAmount'));
     }
 
     public function create()
@@ -160,7 +169,7 @@ class PurchaseController extends Controller
 
             $mealRate->rate = $amount;
 
-            
+            $mealRate->save();
 
 
             // dd($foundingSource->toArray());
@@ -187,26 +196,24 @@ class PurchaseController extends Controller
     public function generateUniqueCode()
     {
         $prefix = 'FM';
-        $purchases = Purchase::orderBy('id', 'DESC')->get()->first();
+        $purchases = Purchase::orderBy('id', 'DESC')->first();
 
-        $parts = explode('-', $purchases->purchase_number);
-        // dd($parts);
+        if ($purchases) {
+            $parts = explode('-', $purchases->purchase_number);
+            $lastPart = end($parts);
+            $nextValue = $lastPart + 1;
+        } else {
+            // If there are no purchases yet, set $nextValue to 1
+            $nextValue = 1;
+        }
 
-        $lastPart = end($parts);
-        // dd($lastPart);
         $currentYearMonth = date('Y-m');
-
-        // Increment the last value
-        $nextValue = $lastPart + 1;
-
-        // Pad the value with leading zeros to ensure it's three digits
         $paddedValue = str_pad($nextValue, 3, '0', STR_PAD_LEFT);
-
-        // Concatenate the parts to form the final code
         $uniqueCode = $prefix . '-' . $currentYearMonth . '-' . $paddedValue;
 
         return $uniqueCode;
     }
+
     public function fundlist($date)
     {
         $availableFundings = Bonus::where('date', $date)
