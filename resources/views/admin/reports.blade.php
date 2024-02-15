@@ -59,8 +59,8 @@
                 <div class="small-box card" style="padding-top: 20px;">
                     <div class="inner d-flex align-items-center justify-content-center">
                         <div class="col-lg-6 col-6 text-center">
-                            <h3><i class="far fa-calendar-check"></i></h3>
-                            <p> Date Wise Meal Rate</p>
+                            <h3><i class="fas fa-download"></i></h3>
+                            <p> Date wise meal rate</p>
                         </div>
                     </div>
                     <div class="icon">
@@ -76,7 +76,7 @@
                     <div class="inner d-flex align-items-center justify-content-center">
                         <div class="col-lg-6 col-6 text-center">
                             <h3><i class="fas fa-download"></i></h3>
-                            <p>Today's Meal Information</p>
+                            <p>Date wise meal information</p>
                         </div>
                     </div>
                     <div class="icon">

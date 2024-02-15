@@ -2,22 +2,20 @@
 <html>
 
 <head>
-    <style>
+<style>
         body {
             font-family: Arial, sans-serif;
-            margin: 20px;
+            margin-top: -50px;
         }
 
         h1 {
             font-size: 24px;
             text-align: center;
         }
-
         h3 {
             font-size: 22px;
             text-align: center;
         }
-
         h4 {
             font-size: 18px;
             text-align: center;
@@ -28,32 +26,23 @@
             border-collapse: collapse;
         }
 
-        th,
-        td {
+        th, td {
             border: 1px solid #000;
             padding: 8px;
             text-align: left;
         }
-
-        p.color-text,
-        p.size-text {
+        p.color-text, p.size-text {
             font-size: small;
             color: #212529;
             margin: 0 0;
-            padding-bottom: 2px;
         }
-
         th {
             background-color: #ccc;
         }
     </style>
-
-
-
 </head>
 
 <body>
-
     <p>{{ $date }}</p>
 
     <h1>CheckIn History</h1>
@@ -81,59 +70,53 @@
         </tr>
     </table>
     <br>
-    <br>
+
 
     <table>
-        <tr>
-            <th>Roll</th>
-            <th>Bp_num</th>
-            <th>Name</th>
-            <th>Breakfast</th>
-            <th>Lunch</th>
-            <th>Dinner</th>
-        </tr>
+    <tr>
+        <th>Reg No.</th>
+        <th>Bp number</th>
+        <th>Name</th>
+        <th>Breakfast</th>
+        <th>Lunch</th>
+        <th>Dinner</th>
+    </tr>
 
-        @foreach ($users as $user)
-        <tr>
+    @foreach ($users as $user)
+    <tr>
+        <td style="padding: 1px; font-size: small; text-align: center;">{{ $user->id }}</td>
+        <td style="padding: 1px; font-size: small; padding: left 20px;">{{ $user->bp_num }}</td>
+        <td style="padding: 1px; font-size: small; padding: left 20px;">{{ $user->name }}</td>
+        @php
+        $userBooking = $bookings->where('user_id', $user->id)->first();
+        @endphp
+        <td style="padding: 1px; font-size: small; text-align: center;">
+            @if ($userBooking && $userBooking->breakfast == 2)
+            <p>Yes</p>
+            @else
+            <p>No</p>
+            @endif
+        </td>
 
-        <tr>
-            <td>{{ $user->id }}</td>
-            <td>{{ $user->bp_num }}</td>
-            <td>{{ $user->name }}</td>
-            @php
-            $userBooking = $bookings->where('user_id', $user->id)->first();
-            @endphp
-            <td>
-                @if ($userBooking && $userBooking->breakfast == 2)
-                <p class="text-success">Yes</p>
+        <td style="padding: 1px; font-size: small; text-align: center;">
+            @if ($userBooking && $userBooking->lunch == 2)
+            <p>Yes</p>
+            @else
+            <p>No</p>
+            @endif
+        </td>
 
-                @else
-                <p class="text-danger">No</p>
-                @endif
-            </td>
+        <td style="padding: 1px; font-size: small; text-align: center;">
+            @if ($userBooking && $userBooking->dinner == 2)
+            <p>Yes</p>
+            @else
+            <p>No</p>
+            @endif
+        </td>
+    </tr>
+    @endforeach
+</table>
 
-            <td>
-                @if ($userBooking && $userBooking->lunch == 2)
-                <p class="text-success">Yes</p>
-
-                @else
-                <p class="text-danger">No</p>
-                @endif
-            </td>
-
-            <td>
-                @if ($userBooking && $userBooking->dinner == 2)
-                <p class="text-success">Yes</p>
-
-                @else
-                <p class="text-danger">No</p>
-                @endif
-            </td>
-
-        </tr>
-        </tr>
-        @endforeach
-    </table>
 
 </body>
 

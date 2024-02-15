@@ -7,35 +7,18 @@
                 <h1>CheckedIn list</h1>
             </div>
             <div class="col-sm-6 text-right">
-                @if($date !='--/--/--')
-                <p>{{ \Carbon\Carbon::createFromFormat('Y-m-d', $date)->format('j F, Y')  }}</p>
-                
-                @endif
+            <button type="button" class="btn btn-primary" onclick="window.location.href='{{ route("admin.pdf") }}'">Download</button>
             </div>
         </div>
     </div>
     <!-- /.container-fluid -->
 </section>
-<section class="content-header">
-    <!-- ... Your existing content ... -->
-</section>
+
 
 <section class="content">
     <div class="container-fluid">
         @include('admin.message')
       
-        
-        <div class="col-12">
-            <div class="input-group-append justify-content-end">
-                <button type="button" class="btn btn-primary" onclick="window.location.href='{{ route("admin.pdf") }}'">Download</button>
-            </div>
-        </div>
-        <div>
-            <br>
-        </div>
-    
-      
-    
         <div class="card">
             <form action="{{ route('checkin.report') }}" method="GET">
                 @csrf
@@ -44,24 +27,13 @@
                         <button type="button" onclick="window.location.href='{{ route("checkin.report") }}'" class="btn btn-default btn-sm">Reset</button>
                     </div>
                     <div class="card-tools">
-                  
-            
-         
-                    <div class="row">
-
-                   
-                        <div class="col-md-4">
-
-                            <div class="mb-3">
-                                <label for="date"><span></span>Date</label>
-
+                    <div class="row">                
+                        <div class="col-3 text-right">
+                                <label for="date">Date</label>
                                 <p class="error"></p>
-                            </div>
                         </div>
                         <div class="col-md-4">
-
-                            <div class="mb-4">
-
+                            <div class="mb-3">
                                 <input type="date-local" name="date" id="date" class="form-control" value={{$date}} required>
                                 <p class="error"></p>
                             </div>
@@ -69,11 +41,9 @@
 
                         <div class="col-3 text-right">
                             <div class="input-group-append">
-                                <button type="submit" class="btn btn-primary">
+                                <button type="submit" class="btn btn-success">
                                     search
-                                </button>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-
-                               
+                                </button>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;    
                             <br></div>
                         </div>
                        
