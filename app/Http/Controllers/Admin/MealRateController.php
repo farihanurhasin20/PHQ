@@ -113,7 +113,12 @@ class MealRateController extends Controller
       return $pdf->stream();
       }
       public function checkinreport(Request $request){
-        $date='--/--/--';
+
+       
+        $today = Carbon::now();
+        $today = Carbon::createFromFormat('Y-m-d H:i:s', $today)->format('Y-m-d');
+        $date= $today;
+        // dd($date);
        
         if($request->date !=null){
         $date=$request->date;
@@ -132,7 +137,7 @@ class MealRateController extends Controller
         // $tomorrow = Carbon::tomorrow(); // Get tomorrow's date
     
         $bookings = Booking::whereIn('user_id', $users->pluck('id'))
-            ->whereDate('date', $request->date) // Filter for tomorrow's date
+            ->whereDate('date', $date) // Filter for tomorrow's date
             ->latest()
             ->get();
             $request->session()->put('date', $date);
