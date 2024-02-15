@@ -110,10 +110,18 @@ class PurchaseController extends Controller
             $Bonus = 0;
             // Process bonus items
             $bonusItemsArray = json_decode($request->input('bonusItems'), true);
-
+        // dd($request->all());
+        
             foreach ($bonusItemsArray as $bonusItem) {
-                $bonus = new Bonus();
                 if ($bonusItem['founding_source_id'] != "") {
+                $bonus = Bonus::where('founding_source_id',$bonusItem['founding_source_id'])
+                ->where('date',$request->input('date'))
+                ->get()->first();
+            
+                if($bonus == null){
+                
+                
+                    $bonus = new Bonus();
                     $Bonus += $bonusItem['amount'];
                     // Find the funding source
                     $fundingSource = FundingSource::find($bonusItem['founding_source_id']);
@@ -133,6 +141,29 @@ class PurchaseController extends Controller
                     $fundingSource->current_fund = $updatedBonusFund;
                     $fundingSource->save();
                 }
+                
+                else
+                {
+                    $Bonus += $bonusItem['amount'];
+                    // Find the funding source
+                    $fundingSource = FundingSource::find($bonusItem['founding_source_id']);
+
+                    $bonus->founding_source_id = $bonusItem['founding_source_id'];
+                    $bonus->amount += $bonusItem['amount'];
+                    $bonus->date = $request->input('date');
+
+                    $bonus->save();
+
+                    // Subtract the amount from the current fund
+                    $bonusFund = $fundingSource->current_fund;
+
+                    $updatedBonusFund = $bonusFund - $bonusItem['amount'];
+
+                    // Update the current fund of the funding source
+                    $fundingSource->current_fund = $updatedBonusFund;
+                    $fundingSource->save();
+                }
+            }
             }
 
 
@@ -147,11 +178,24 @@ class PurchaseController extends Controller
             $foundingSource->current_fund = $updatedFund;
             $foundingSource->save();
 
+            $bonus = Bonus::where('founding_source_id',$memberSourceId)
+            ->where('date',$request->input('date'))
+            ->get()->first();
+        
+            if($bonus == null){
             $bonus = new Bonus();
             $bonus->founding_source_id =  $memberSourceId;
             $bonus->amount = $Source - $Bonus;
             $bonus->date = $request->input('date');
             $bonus->save();
+            }else{
+                
+                $bonus->founding_source_id =  $memberSourceId;
+                $bonus->amount += $Source - $Bonus;
+            $bonus->date = $request->input('date');
+
+                $bonus->save();
+            }
 
             $mealRate = MealRate::where('date', $request->input('date'))->first(); // Use first() to get the first matching record
 
@@ -233,5 +277,31 @@ class PurchaseController extends Controller
         $foundingSource = Bonus::where('date', $date)->get();
 
         return view('admin.purchase.funding_list', compact('availableFundings'));
+    }
+    public function destroy($id,Request $request)
+    {
+        
+        $Purchase = Purchase::find($id);
+        // dd($Purchase); 
+        if($Purchase == null)
+        {
+        $request->session()->flash('Error','Purchase not Found');
+        return response()->json([
+            'status'=>true,
+            'message' =>'Category not Found'
+        ]);
+       }
+       $bonus = Bonus::where('date',$Purchase->date)->where('founding_source_id',$Purchase->founding_source_id)->get()->first();
+
+        dd($bonus); 
+       
+        $category->delete();
+
+        $request->session()->flash('success','Category deleted successfully');
+        return response()->json([
+            'status'=>true,
+            'message' =>'Category deleted successfully'
+        ]);
+
     }
 }

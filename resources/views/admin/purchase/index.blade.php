@@ -120,6 +120,8 @@
                             <th>Unit Price</th>
                             <th>Funding Source</th>
                             <th>Total Price</th>
+                            <th>Action</th>
+
 
                         </tr>
                     </thead>
@@ -138,7 +140,12 @@
                             <td><a href="{{route('purchases.fundlist', $purchase->date)}}">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <i class="nav-icon fas fa-eye"></i>
                                 </a></td>
 
-                            <td>{{ $purchase->grand_total }}</td>
+                            <td>{{ $purchase->grand_total }}</td> 
+                            <td>  <a href="#" onclick="destroyCategory({{$purchase->id}})" class="text-danger w-4 h-4 mr-1">
+                                            <svg wire:loading.remove.delay="" wire:target="" class="filament-link-icon w-4 h-4 mr-1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                                                <path	ath fill-rule="evenodd" d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z" clip-rule="evenodd"></path>
+                                            </svg>
+                                        </a></td>
 
                         </tr>
                         @endforeach
@@ -146,18 +153,24 @@
                             <!-- <th colspan="7" align="right">Subtotal:</th> -->
                             <td colspan="8" align="right">Subtotal:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span></span></td>
                             <td>{{number_format($purchasesAmount,2)}}</td>
+                            <td></td>
+
                         </tr>
 
                         <tr>
                             <!-- <th colspan="7" align="right">Subtotal:</th> -->
                             <td colspan="8" align="right">Total Bonus:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span></span></td>
                             <td>{{number_format($bonusAmount,2)}}</td>
+                            <td></td>
+
                         </tr>
 
                         <tr>
                             <!-- <th colspan="7" align="right">Subtotal:</th> -->
                             <td colspan="8" align="right">Total after Bonus:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span></span></td>
                             <td>{{number_format($purchasesAmount-$bonusAmount,2)}}</td>
+                            <td></td>
+
                         </tr>
                         @else
                         <tr>
@@ -246,6 +259,34 @@
             });
         });
     });
+    function destroyCategory(id){
+    var url = '{{ route("purchases.delete", "ID") }}';
+
+    var newUrl  = url.replace("ID",id)
+    if (confirm("Are you sure you want to delete")) {
+        $.ajax({
+    url: newUrl,
+    type: 'delete',
+    data: {},  // Fixed typo: 'data' instead of 'date'
+    dataType: 'json',
+    headers: {
+        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+    },
+    success: function(response) {  // Fixed typo: 'function' instead of 'funtion'
+        // Handle success response here
+        $("button[type=submit]").prop('disabled', false);
+        if (response["status"]) {
+            window.location.href = "{{route('purchases.index')}}";
+        } else {
+            // Handle other cases if needed
+        }
+    }  // Fixed typo: removed extra closing parenthesis
+});
+    }
+
+
+}
+
 </script>
 
 @endsection
