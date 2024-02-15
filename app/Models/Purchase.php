@@ -13,6 +13,11 @@ class Purchase extends Model
     return $this->belongsTo(Item::class);
 }
 
+public function itemUnit()
+{
+    return $this->belongsTo(ItemUnits::class);
+}
+
 public function foundingSource()
 {
     return $this->belongsTo(FundingSource::class, 'founding_source_id');
