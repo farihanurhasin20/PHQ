@@ -17,13 +17,13 @@ class MealRateController extends Controller
 {
     public function index(Request $request)
     {
-        $startDate='--/--/--';
-        $endDate='--/--/--';
-        $userNumber=0;
-        $totalAmount=0;
-        $rate=0;
+        $startDate = '--/--/--';
+        $endDate = '--/--/--';
+        $userNumber = 0;
+        $totalAmount = 0;
+        $rate = 0;
         $mealRates = MealRate::orderBy('date', 'DESC')->paginate(10);
-        
+
         // $purchasesAmount=$purchasesAll->sum('grand_total');
         if ($request->filled('fromDate') && $request->filled('toDate')) {
             $start_date = $request->fromDate;
@@ -38,14 +38,14 @@ class MealRateController extends Controller
             $rate = $userNumber > 0 ? $totalAmount / $userNumber : 0;
             $mealRates = MealRate::whereBetween("date", [$start_date, $end_date])->get();
             // $purchasesAmount = $mealRates->sum('grand_total');
-        //    dd($totalAmount,$userNumber);
-            $mealRates=MealRate::whereBetween("date", [$start_date, $end_date])->paginate(20);
+            //    dd($totalAmount,$userNumber);
+            $mealRates = MealRate::whereBetween("date", [$start_date, $end_date])->paginate(20);
         }
         $today = Carbon::today();
 
         $mealRate = MealRate::where('date', $today)->first(); // Use first() to get the first matching record
 
-        if ($mealRate== null) {
+        if ($mealRate == null) {
             $mealRate = new MealRate();
             $mealRate->date = $today;
         }
@@ -63,15 +63,15 @@ class MealRateController extends Controller
 
         $request->session()->put('startDate', $startDate);
         $request->session()->put('endDate', $endDate);
-// dd($purchasesAmount,$purchases);
+        // dd($purchasesAmount,$purchases);
         // $datesFromController = $start_date;
-        return view('admin.meal_rate.index', compact('mealRates','startDate','endDate','totalAmount','userNumber','rate'));
+        return view('admin.meal_rate.index', compact('mealRates', 'startDate', 'endDate', 'totalAmount', 'userNumber', 'rate'));
     }
     public function store(Request $request)
     {
-        
+
         $today = Carbon::today();
-        
+
         return response()->json([
             'status' => true,
             'message' => 'Purchase created successfully.'
@@ -79,8 +79,8 @@ class MealRateController extends Controller
     }
     public function downloadPDF(Request $request)
     {
-    
-         
+
+
         $today = Carbon::today();
         $startDate = $request->session()->get('startDate');
         $endDate = $request->session()->get('endDate');
@@ -90,39 +90,38 @@ class MealRateController extends Controller
 
 
         // dd($userId);
-        
+
         $pdf = PDF::loadView('admin.meal_rate.pdf', [
-          'purchase' => $purchases,
-          'mealRates' => $mealRates,
-          'booking' => $booking,
-          'startDate' => $startDate,
-          'endDate' => $endDate,
-      ]);
+            'purchase' => $purchases,
+            'mealRates' => $mealRates,
+            'booking' => $booking,
+            'startDate' => $startDate,
+            'endDate' => $endDate,
+        ]);
 
-      $fileName = 'CheckIN-List' . now()->format('Y-m-d_His') . '.pdf';
-    //  return view('admin.meal_rate.pdf', [
-    //         'purchase' => $purchases,
-    //         'mealRates' => $mealRates,
-    //         'booking' => $booking,
-    //         'startDate' => $startDate,
-    //         'endDate' => $endDate,
-        
-    //         ]
-        
-    //           );
-      return $pdf->stream();
-      }
-      public function checkinreport(Request $request){
+        $fileName = 'CheckIN-List' . now()->format('Y-m-d_His') . '.pdf';
+        //  return view('admin.meal_rate.pdf', [
+        //         'purchase' => $purchases,
+        //         'mealRates' => $mealRates,
+        //         'booking' => $booking,
+        //         'startDate' => $startDate,
+        //         'endDate' => $endDate,
 
-       
+        //         ]
+
+        //           );
+        return $pdf->stream();
+    }
+    public function checkinreport(Request $request)
+    {
         $today = Carbon::now();
         $today = Carbon::createFromFormat('Y-m-d H:i:s', $today)->format('Y-m-d');
-        $date= $today;
+        $date = $today;
         // dd($date);
-       
-        if($request->date !=null){
-        $date=$request->date;
-        // dd($request->date);
+
+        if ($request->date != null) {
+            $date = $request->date;
+            // dd($request->date);
 
         }
         $users = User::where('role', 1)->latest();
@@ -130,19 +129,18 @@ class MealRateController extends Controller
         if (!empty($request->get('keyword'))) {
             $keyword = $request->get('keyword');
             $users = $users->where('id', 'like', '%' . $keyword . '%');
-        } 
-    
+        }
+
         $users = $users->paginate(10);
-    
+
         // $tomorrow = Carbon::tomorrow(); // Get tomorrow's date
-    
+
         $bookings = Booking::whereIn('user_id', $users->pluck('id'))
             ->whereDate('date', $date) // Filter for tomorrow's date
             ->latest()
             ->get();
-            $request->session()->put('date', $date);
-        
-        return view('admin.meal_rate.check_in_report', compact('bookings', 'users','date'));
-      }
-    
+        $request->session()->put('date', $date);
+
+        return view('admin.meal_rate.check_in_report', compact('bookings', 'users', 'date'));
+    }
 }
