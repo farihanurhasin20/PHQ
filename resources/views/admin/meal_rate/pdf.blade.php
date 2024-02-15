@@ -65,11 +65,11 @@
 <br>
 <table>
     <tr>
-    <th>id</th>
-    <th>date</th>
-    <th>booked</th>
-    <th>grand total</th>
-    <th>rate</th>
+    <th>ID</th>
+    <th>Date</th>
+    <th>Booked</th>
+    <th>Expense (Tk.)</th>
+    <th>Meal Rate (Tk.)</th>
         
     </tr> 
  
@@ -112,13 +112,13 @@
 </tr>
 <tr>     
 <td colspan="3" align="right" style="border: none;"></td>
-    <td  style=" font-weight: bold;"  >Total Amount:</td>
-    <td>{{ $totalAmount }}</td>
+    <td  style=" font-weight: bold;"  >Total Expense:</td>
+    <td>{{ $totalAmount }} Tk.</td>
 </tr>
 <tr>     
 <td colspan="3" align="right" style="border: none; font-weight: bold;"></td>
-    <td style=" font-weight: bold;"  >Total rate:</td>
-    <td>{{ $rate }}</td>
+    <td style=" font-weight: bold;"  >Total Meal Rate:</td>
+    <td>{{ $rate }} Tk.</td>
 </tr>
 </table>
 <br>
