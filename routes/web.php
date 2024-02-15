@@ -103,6 +103,7 @@ Route::group(['prefix' => 'admin'], function () {
         //Purchase
         Route::get('/purchases', [PurchaseController::class, 'index'])->name('purchases.index');
         Route::post('/purchases', [PurchaseController::class, 'index'])->name('purchases.index');
+        Route::delete('/purchases/{id}', [PurchaseController::class, 'destroy'])->name('purchases.delete');
        
         Route::get('/get-purchases-id/{unitId}', [PurchaseController::class, 'getUnitId'])->name('purchases.getUnitId');
         Route::get('/purchases/create', [PurchaseController::class, 'create'])->name('purchases.create');
